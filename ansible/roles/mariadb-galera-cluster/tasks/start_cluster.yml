@@ -1,0 +1,10 @@
+---
+- name: start first node
+  command: galera_new_cluster
+  when: ansible_eth1.ipv4.address == '172.16.1.4'
+#
+- name: start cluster  
+  service:
+    name: "{{ service_db }}"
+    state: started
+    enabled: true    

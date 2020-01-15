@@ -1,0 +1,36 @@
+---
+# tasks file for bertvv.squirrelmail
+
+- include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_distribution }}.yml"
+    - "{{ ansible_os_family }}.yml"
+  tags: squirrelmail
+
+- name: Install package repository
+  package:
+    name: "{{ squirrelmail_repository }}"
+    state: installed
+  tags: squirrelmail
+
+- name: Install packages
+  package:
+    name: "{{ item }}"
+    state: installed
+  with_items: "{{ squirrelmail_packages }}"
+  tags: squirrelmail
+
+- name: Install Squirrelmail configuration
+  template:
+    src: squirrelmail.conf.j2
+    dest: /usr/share/squirrelmail/config/config.php
+  notify: restart httpd
+  tags: squirrelmail
+
+- name: Create symlink to squirrelmail
+  file:
+    src: /usr/share/squirrelmail
+    dest: "{{ Squirrelmail_webpage_directory }}"
+    state: link
+    force: yes
+  notify: restart httpd

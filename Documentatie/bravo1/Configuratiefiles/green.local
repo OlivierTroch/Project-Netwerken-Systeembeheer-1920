@@ -1,0 +1,42 @@
+; Hash: 8178e11e4ba6b253bab057d5378ae592 1570961628
+; Zone file for green.local
+;
+; Ansible managed
+;
+
+$ORIGIN green.local.
+$TTL 1W
+
+@ IN SOA bravo1.green.local. hostmaster.green.local. (
+  1570961628
+  2D
+  2H
+  2W
+  2D )
+
+                           IN  NS     bravo1.green.local.
+
+
+
+@                          IN  A      172.16.1.69
+www                        IN  CNAME  @
+alpha1                     IN  A      172.16.1.65
+bravo1                     IN  A      172.16.1.66
+ns1                        IN  DNAME  bravo1
+charlie1                   IN  A      172.16.1.67
+ns2                        IN  DNAME  charlie1
+delta1                     IN  A      172.16.1.68
+echo1                      IN  A      172.16.1.69
+kilo1                      IN  A      172.16.1.1
+lima1                      IN  A      172.16.1.2
+mike1                      IN  A      172.16.1.3
+november1                  IN  A      172.16.1.4
+oscar1                     IN  A      172.16.1.5
+papa1                      IN  A      172.16.1.6
+zulu1                      IN  A      172.16.1.106
+zulu1                      IN  A      172.16.1.102
+Router0                    IN  A      172.16.1.105
+Switch1                    IN  A      172.16.1.97
+Switch2                    IN  A      172.16.1.98
+Switch2                    IN  A      172.16.1.101
+Management                 IN  A      172.16.99.1

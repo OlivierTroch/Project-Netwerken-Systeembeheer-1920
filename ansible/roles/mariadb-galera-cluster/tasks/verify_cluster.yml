@@ -1,0 +1,6 @@
+---
+- name: verify cluster
+  shell: mysql -u "{{ root_login }}" -p"{{ root_password }}" -e "show status like 'wsrep_cluster_size'"
+  register: result
+- debug:
+    var: result

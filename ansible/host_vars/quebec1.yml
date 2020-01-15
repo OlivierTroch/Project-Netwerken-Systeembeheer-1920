@@ -1,0 +1,35 @@
+---
+
+    
+      
+    rhbase_firewall_allow_services: # DNS toelaten door Firewall
+      - dns
+
+    rhbase_firewall_allow_ports:
+      - 9100/tcp
+
+    rhbase_install_packages:
+      - bind-utils
+      - git
+
+    dns_nameservers:
+      - "DNS1=8.8.8.8"
+      - "DNS2=172.16.1.66"
+      - "DNS3=172.16.1.67"
+
+
+    dnsmasq_domain: 'green.local' # Juiste Domain
+
+    dnsmasq_domain_needed: 'false' # Forward local requests
+
+    dnsmasq_listen_address: 172.16.1.70
+
+    dnsmasq_upstream_servers:
+      - 8.8.8.8
+      # HoGent DNS Nog toevoegen
+      
+      - /green.local/172.16.1.66 # ns1.green.local
+      - /green.local/172.16.1.67 # ns2.green.local
+
+      - /red.local/172.18.1.66 # ns1.red.local
+      - /red.local/172.18.1.67 # ns2.red.local

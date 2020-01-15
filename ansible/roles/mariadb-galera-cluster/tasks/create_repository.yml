@@ -1,0 +1,10 @@
+---
+- name: Add repository mariadb-server galera cluster
+  yum_repository:
+    name: mariadb
+    description: Repository MariaDb-server Galera cluster
+    baseurl: "{{ repo }}"
+    gpgkey: "{{ key }}"
+    gpgcheck: yes
+    enabled: yes
+...

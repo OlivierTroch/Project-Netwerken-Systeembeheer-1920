@@ -1,0 +1,30 @@
+---
+# tasks file for mariadb-galera-cluster
+- name: include users and password vars
+  include_vars: password.yml
+- name: include packages vars
+  include_vars: RedHat.yml
+#
+#- name: create repository
+ # import_tasks: create_repository.yml
+  #tags: repo
+#
+- name: install packages
+  import_tasks: install.yml
+  tags: db
+#
+- name: config galera cluster file
+  import_tasks: config_galera_cluster.yml
+  tags: db
+#
+- name: start galera cluster
+  import_tasks: start_cluster.yml
+  tags: db
+#
+#- name: config mariadb
+ # import_tasks: config_mariadb.yml
+  #tags: db
+#
+- name: verify cluster status
+  import_tasks: verify_cluster.yml
+  tags: db

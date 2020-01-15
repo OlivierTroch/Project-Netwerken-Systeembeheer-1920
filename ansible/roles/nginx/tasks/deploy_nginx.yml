@@ -1,0 +1,59 @@
+- name: Make sure epel repo is enabled
+  yum:
+    name: epel-release
+    state: present
+
+- name: Install nginx
+  yum:
+    name: nginx
+    state: present
+    
+- name: Install cryptography 2
+  yum:
+    name: python2-cryptography
+    state: present
+   
+- name: Install cryptography 3
+  yum:
+    name: python36-cryptography
+    state: present
+
+- name: Copy default nginx config
+  copy:
+    src: nginx.conf
+    dest: "{{ nginx_default_config }}"
+  notify: restart nginx
+  
+
+- name: Copy site config
+  template:
+    src: site.conf.j2
+    dest: "{{ nginx_site_config }}"
+  notify: restart nginx
+
+- name: Copy ssl config
+  template:
+    src: ssl.conf.j2
+    dest: "{{ nginx_ssl_config }}"
+  notify: restart nginx
+
+- name: Generate openssl private key
+  openssl_privatekey:
+    path: "{{ nginx_key_directory }}/{{ private_key }}"
+    type: "{{ private_key_type }}"
+    curve: "{{ private_key_curve }}"
+
+- name: Generate openssl csr
+  openssl_csr:
+    path: "{{ nginx_key_directory }}/{{ csr }}"
+    privatekey_path: "{{ nginx_key_directory }}/{{ private_key }}"
+    common_name: "{{ domain_name | default(ansible_nodename) }}"
+    subject_alt_name: "DNS:{{ domain_name | default(ansible_nodename) }}"
+
+- name: Generate self signed certificate
+  openssl_certificate:
+    path: "{{ nginx_cert_directory }}/{{ certificate }}"
+    privatekey_path: "{{ nginx_key_directory }}/{{ private_key }}"
+    csr_path: "{{ nginx_key_directory }}/{{ csr }}"
+    provider: selfsigned
+  notify: restart nginx

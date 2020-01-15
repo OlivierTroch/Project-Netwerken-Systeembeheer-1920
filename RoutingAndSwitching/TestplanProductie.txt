@@ -1,0 +1,29 @@
+# Testplan Productie
+## vanuit VLAN 20
+### LAN
+- ping 172.16.0.80 (S1.3)
+- ping 172.16.0.254 (R2.1 DG)
+- ping 172.16.1.62 (R2.1 naar vlan 3O)
+- ping 172.16.1.50 (S1.2 vlan 30)
+- ping 172.16.1.97 (R2.1 serieel)
+- ping 172.16.1.98 (R2.2 serieel)
+- ping 172.16.1.94 (R2.2 naar vlan 50)
+- ping 172.16.1.80 (S1.1 vlan 50)
+
+### Firewall
+- ping 172.16.1.101 (R2.2 naar Zulu1)
+- ping 172.16.1.102 (zulu1 - inside - lan)
+- ping 172.16.1.106 (zulu1 - outside - wan) 
+
+### WAN
+- ping 172.16.1.105 (R1.1 van zulu1)
+- ping 172.16.1.109 (R1.1 naar R1.2)
+- ping 172.16.1.110 (R1.2 van R1.1)
+- ping 172.16.2.2 (R1.2 serieel naar Top)
+- ping 172.16.2.1 (Top van R1.2)
+surf naar chamilo.be (ip route 172.16.0.0 255.255.0.0 s0/1/1 WINDOWS!)
+
+### SSH
+- ssh Admin@172.16.1.50 (S1.1 - vlan 50)
+- ssh Admin@172.16.0.254 (R2.1)
+- ssh Admin@172.16.1.110 (R1.2)

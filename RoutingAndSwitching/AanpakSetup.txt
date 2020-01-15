@@ -1,0 +1,20 @@
+Langs onder beginnen met setup
+Ports:
+Eerste 3 vrije ports zijn: S1.[1-2-3]
+Poort 4 en 5: R2.[1-2] 
+Poort 6 en 7: Firewall in en firewall out
+Poort 8 en 9: R1.[1-2]
+
+
+1. Routers en switches connecteren tot zulu en console kabels boven zulu ook
+2. Routers clearen door erase startup-config en reload
+3. Switches clearen door delete vlan.dat en erase startup-config en reload
+4. Olliver configureert switches door middel van config file | Bob configureert routers door middel van config file
+5. Verbinding tussen R2.2 en R1.1 moeten voorlopig in hetzelfde netwerk zitten zolang de firewall niet up staat.
+6. Pingen voor voorlopig configuratie te testen.
+
+7. Configuratie van R1.1 en R1.2 door Olivier en Bob
+8. Pingen om configuratie te testen boven de firewall
+9. VPN testen naar windows router
+10. Firewall tussen routers R2.2 en R1.1 en ip addressen op deze routers aanpassen
+11. NAT testen

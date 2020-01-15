@@ -1,0 +1,15 @@
+# vagrant-hosts.yml - List of hosts to be created by Vagrant.
+#
+# For more information about the possible settings, see the documentation at
+# <https://github.com/bertvv/ansible-skeleton>
+---
+
+- name: pfsense
+  box: "OlivierTroch/PFSense"
+  intnet: true
+
+- name: lanmachine1
+  intnet: true
+
+- name: wanmachine1
+  intnet: true	

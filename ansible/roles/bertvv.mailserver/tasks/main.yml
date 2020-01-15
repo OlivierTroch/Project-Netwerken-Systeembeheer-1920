@@ -1,0 +1,13 @@
+# roles/mailserver/tasks/main.yml
+---
+
+- include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_distribution }}.yml"
+    - "{{ ansible_os_family }}.yml"
+  tags: mailserver
+
+- include_tasks: postfix.yml
+- include_tasks: dovecot.yml
+- include_tasks: spamassassin.yml
+- include_tasks: clamav.yml

@@ -1,0 +1,46 @@
+---
+
+# Crontab management tasks
+
+- name: 'CONFIG | CRONTAB | Ensure reports directory exists'
+  file:
+    path: "{{ lynis_paths.dirs.reports.path }}"
+    owner: "{{ lynis_paths.dirs.reports.owner | default(lynis_user.name) }}"
+    group: "{{ lynis_paths.dirs.reports.group | default(lynis_group.name) }}"
+    mode: "{{ lynis_paths.dirs.reports.mode | default('0750') }}"
+    state: 'directory'
+
+
+- name: 'CONFIG | CRONTAB | Ensure cron.d folder exists'
+  file:
+    path: '/etc/cron.d'
+    owner: 'root'
+    group: 'root'
+    state: 'directory'
+
+
+- name: 'CONFIG | CRONTAB | Manage crontab vars'
+  cron:
+    cron_file: "{{ lynis_crontab_file_name }}"
+    env: True
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    user: "{{ item.user }}"
+    state: "{{ item.state }}"
+  with_items: "{{ lynis_crontab_vars }}"
+
+
+- name: 'CONFIG | CRONTAB | Manage crontab jobs'
+  no_log: True
+  cron:
+    name: "{{ item.name }}"
+    cron_file: "{{ item.file_name }}"
+    minute: "{{ item.minute }}"
+    hour: "{{ item.hour }}"
+    weekday: "{{ item.weekday }}"
+    day: "{{ item.day }}"
+    month: "{{ item.month }}"
+    job: "{{ item.job }}"
+    user: "{{ item.user }}"
+    state: "{{ item.state }}"
+  with_items: "{{ lynis_crontab_jobs }}"

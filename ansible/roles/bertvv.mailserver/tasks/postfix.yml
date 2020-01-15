@@ -1,0 +1,85 @@
+# tasks/postfix.yml -- Install and configure Postfix
+---
+
+- name: Install Postfix
+  package:
+    name: "{{ item }}"
+    state: installed
+  with_items: "{{ mailserver_postfix_packages }}"
+  tags:
+    - mailserver
+    - postfix
+
+- name: Ensure Postfix is started
+  service:
+    name: "{{ mailserver_postfix_service }}"
+    state: started
+    enabled: true
+  tags:
+    - mailserver
+    - postfix
+
+- name: Make SSL directory
+  file:
+    path: /etc/postfix/ssl
+    state: directory
+    mode: 0755
+  tags:
+    - mailserver
+    - ssl
+
+- name: Copy SSL key to directory
+  copy:
+    src: files/
+    dest: "{{ postfix_config_dir }}/ssl"
+  tags:
+    - mailserver
+    - ssl
+
+- name: Install postfix main configuration1
+  template:
+    src: postfix_main.cf.j2
+    dest: "{{ postfix_config_dir }}/main.cf"
+  tags:
+    - postfix
+    - mailserver
+  notify: restart postfix
+
+- name: Install postfix master configuration1
+  template:
+    src: postfix_master.cf.j2
+    dest: "{{ postfix_config_dir }}/master.cf"
+  tags:
+    - postfix
+    - mailserver
+  notify: restart postfix
+
+- name: Create file local-host-names
+  copy:
+    dest: /etc/postfix/local-host-names
+    content: "{{ postfix_mydomain }}"
+  tags:
+    - postfix
+    - mailserver
+  notify: restart postfix
+
+- name: Link ldap files with postfix's main configuration
+  blockinfile:
+    dest: "{{ postfix_config_dir }}/main.cf"
+    block: |
+      alias_maps = hash:/etc/aliases
+      virtual_alias_maps = ldap:/etc/postfix/ldap-aliases.cf
+      local_recipient_maps = $alias_maps, ldap:/etc/postfix/ldap-users.cf
+  when: postfix_ldap == true
+
+- name: Create ldap aliases
+  template:
+    src: ldap-aliases.cf.j2
+    dest: /etc/postfix/ldap-aliases.cf
+  when: postfix_ldap == true
+
+- name: Create ldap users file
+  template:
+    src: ldap-users.cf.j2
+    dest: /etc/postfix/ldap-users.cf
+  when: postfix_ldap == true

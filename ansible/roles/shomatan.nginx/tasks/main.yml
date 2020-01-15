@@ -1,0 +1,53 @@
+---
+# variable setup.
+- name: Include OS-specific variables.
+  include_vars: "{{ ansible_os_family }}.yml"
+
+- name: Define nginx_user.
+  set_fact: nginx_user="{{ __nginx_user }}"
+  when: nginx_user is not defined
+
+# setup/install tasks.
+- include: setup-RedHat.yml
+  when: ansible_os_family == 'RedHat'
+  static: no
+
+- include: setup-Ubuntu.yml
+  when: ansible_distribution == 'Ubuntu'
+  static: no
+
+# configure
+- name: Copy nginx configuration in place.
+  template:
+    src: nginx.conf.j2
+    dest: "{{ nginx_conf_file_path }}"
+  notify: restart nginx
+
+- name: Delete default conf file.
+  file:
+    path: "{{ nginx_conf_path }}/default.conf"
+    state: absent
+  notify: restart nginx
+
+- name: Copy log lotate configuration in place.
+  template:
+    src: loglotate.j2
+    dest: /etc/logrotate.d/nginx
+
+- name: Create client body temp directory.
+  file:
+    path: "{{ nginx_client_body_temp_path }}"
+    owner: "{{ nginx_user }}"
+    group: "{{ nginx_user }}"
+    state: directory
+
+- name: Allow processes to bind to non-local address.
+  copy: src="/vagrant/ansible/roles/shomatan.nginx/templates/sysctl.conf.j2" dest="/etc/sysctl.conf" remote_src=True
+
+- name: Reload sysctl.conf
+  command: sysctl -p /etc/sysctl.conf
+  
+# service
+- name: Ensure nginx is started and enabled to start at boot.
+  service: name=nginx state=started enabled=yes
+  when: ansible_connection != 'docker'

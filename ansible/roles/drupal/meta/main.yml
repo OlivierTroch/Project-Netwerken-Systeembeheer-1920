@@ -1,0 +1,6 @@
+dependencies:
+  - role: nginx
+    vars:
+      domain_name: "{{ drupal_domain }}"
+      root_directory: "{{ drupal_directory }}/web"
+      nginx_recipe: "{{ lookup('file', 'drupal.recipe') }}"

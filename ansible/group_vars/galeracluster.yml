@@ -1,0 +1,43 @@
+# group_vars/galeracluster.yml
+---
+##Mariadb-server variabalen##
+
+#Databanken aanmaken voor de drupal servers
+mariadb_databases: 
+  - name: drupal_echo1 
+  - name: drupal_mike1
+
+#Databank gebruikers aanmaken voor de drupal servers
+mariadb_users: 
+  - name: echo1_user
+    password: echo1
+    priv: 'drupal_echo1.*:ALL'
+    append_privs: 'yes'        
+    host: '172.16.1.69'
+  - name: mike1_user
+    password: mike1
+    priv: 'drupal_mike1.*:ALL'
+    append_privs: 'yes'
+    host: '172.16.1.3'
+  - name: prometheus
+    password: prometheus
+    priv: '*.*:PROCESS,REPLICATION CLIENT,SELECT'
+    host: '127.0.0.1'
+
+
+#root passwoord instellen
+mariadb_root_password: admin
+
+#zorgen dat elke remote connectie toegang heeft
+mariadb_bind_address: '0.0.0.0'
+
+##Mariadb-galera-cluster variabelen##
+galera_cluster_name: mariadb_cluster
+root_password: admin
+
+# Monitoring inschakelen #
+mariadb_server_cnf:
+  innodb_monitor_enable: ON
+
+mysqld_exporter_mysql_user: prometheus
+mysqld_exporter_mysql_password: prometheus

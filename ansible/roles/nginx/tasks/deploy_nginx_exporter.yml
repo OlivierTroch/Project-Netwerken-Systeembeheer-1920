@@ -1,0 +1,39 @@
+- name: Enable metrics for nginx
+  copy:
+    src: metrics.conf
+    dest: /etc/nginx/conf.d/metrics.conf
+
+- name: Create unprivileged user for nginx exporter
+  user:
+    name: "{{ nginx_exporter_user }}"
+    create_home: no
+    system: yes
+
+- name: Create directory for nginx exporter
+  file:
+    path: "{{ nginx_exporter_directory }}"
+    state: directory
+    owner: "{{ nginx_exporter_user }}"
+    group: "{{ nginx_exporter_group }}"
+    mode: 0700
+
+- name: Download nginx_exporter binary and verify integrity
+  get_url:
+    url: "{{ nginx_exporter_download }}"
+    dest: /tmp/nginx_exporter.tar.gz
+    checksum: "{{ nginx_exporter_checksum }}"
+
+- name: Unarchive nginx_exporter archive
+  unarchive:
+      src: /tmp/nginx_exporter.tar.gz
+      remote_src: yes
+      dest: "{{ nginx_exporter_directory }}"
+      owner: "{{ nginx_exporter_user }}"
+      group: "{{ nginx_exporter_group }}"
+  notify: restart nginx exporter
+
+- name: Copy systemd service file
+  template:
+      src: nginx_exporter.service.j2
+      dest: /etc/systemd/system/{{ nginx_exporter_service }}.service
+  notify: restart nginx exporter

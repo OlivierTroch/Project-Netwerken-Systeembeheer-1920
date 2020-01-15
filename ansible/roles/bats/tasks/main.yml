@@ -1,0 +1,9 @@
+---
+- name: Make sure bats is installed
+  become: yes
+  shell: |
+    cd /home/vagrant
+    git clone https://github.com/bats-core/bats-core.git
+    cd ./bats-core
+    sudo bash ./install.sh /usr/local
+    exit 0

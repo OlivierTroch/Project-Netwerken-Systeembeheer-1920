@@ -1,0 +1,12 @@
+# Groups
+dn: cn={{ item.name }},{{ item.group_ou }},dc={{ openldap_server_domain_name.split('.')[0] }},dc={{ openldap_server_domain_name.split('.')[1] }}
+objectClass: posixgroup
+objectClass: top
+cn: {{ item.name }}
+{% if item.memberuid is defined %}
+{% for group_name in item.memberuid %}
+memberuid: {{group_name}}
+{% endfor %}
+{% endif %}
+gidNumber: {{ item.gid }}
+description: {{ item.name|capitalize }}

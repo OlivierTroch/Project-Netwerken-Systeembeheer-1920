@@ -1,0 +1,7 @@
+---
+- name: Ensure xinetd is installed.
+  yum:
+    name: xinetd
+
+- name: Ensure xinetd is started and enabled to start at boot.
+  service: name=xinetd state=started enabled=yes

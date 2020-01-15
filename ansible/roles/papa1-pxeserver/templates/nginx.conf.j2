@@ -1,0 +1,19 @@
+# {{ ansible_managed }}
+
+server {
+  listen {{ pxe_server_kickstart_listen }};
+
+  autoindex on;
+
+  location /centos8 {
+    alias {{ pxe_server_kickstart_iso_mount_path }};
+  }
+
+  location /fedora {
+    alias {{ pxe_server_kickstart_iso_mount_path_fedora }};
+  }
+
+  location /kickstart {
+    root /var/www/html;
+  }
+}

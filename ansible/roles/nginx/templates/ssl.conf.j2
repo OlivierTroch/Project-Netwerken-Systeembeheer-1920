@@ -1,0 +1,12 @@
+ssl_certificate {{ nginx_cert_directory }}/{{ certificate }};
+ssl_certificate_key {{ nginx_key_directory }}/{{ private_key }};
+
+ssl_session_timeout {{ ssl_session_timeout }};
+ssl_session_cache {{ ssl_session_cache }};
+ssl_session_tickets {{ ssl_session_tickets }};
+
+ssl_protocols {{ ssl_protocols }};
+ssl_ciphers {{ ssl_ciphers }};
+ssl_prefer_server_ciphers {{ ssl_prefer_server_ciphers }};
+
+add_header {{ hsts }};

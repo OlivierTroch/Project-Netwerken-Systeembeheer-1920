@@ -1,0 +1,81 @@
+---
+rhbase_repositories:
+  - epel-release
+
+rhbase_install_packages:
+  - bash-completion
+  - policycoreutils
+  - setroubleshoot-server
+  - tree
+  - vim-enhanced
+  - tcpdump
+
+rhbase_firewall_allow_services:
+  - http
+  - https
+  - pop3
+  - pop3s
+  - imap
+  - imaps
+  - smtp
+  - smtps
+  - smtp-submission
+  - ldap
+  - ldaps
+
+#DNS SERVER
+dns_nameservers:
+  - 172.16.1.66
+  - 172.16.1.67
+  - 8.8.8.8
+
+rhbase_users:
+   - name: johndoe
+     groups:
+       - users
+       - wheel
+     # Password = test123
+     password: "$6$rzSe0ya3TumnQAGo$oJfY6KB/GhlaTeL98CjQ9.KgciX60R/iEqaPkyyTqUUACKaaRD2MjcaPWPkk7ZFO4v.9iDfYlWo7E/cboy1nP0"
+     shell: /sbin/nologin
+
+   - name: ericdoe
+     groups:
+       - users
+       - wheel
+     password: "$6$DBMkzPdb9zrv3B1s$iaSQ/M3Rd5XtJkMeyhczh7MUvevU0rS/3tDpjpsQ59jEZRqmdyAaQly/AigJUyp4f4HUB9sS5hFL5lkWDxQMs/"
+     shell: /sbin/nologin
+
+post_tasks:
+  - name: Add imap host to /etc/hosts
+    lineinfile:
+      dest: /etc/hosts
+      line: "172.16.1.66 mail.green.local"
+  - seboolean:
+      name: httpd_can_sendmail
+      state: yes
+      persistent: yes
+
+rhbase_selinux_booleans:
+  - httpd_can_network_connect
+
+rhbase_firewall_allow_ports:
+  - 9100/tcp # Dit is nodig om de server te monitoren
+  - 587/tcp
+
+postfix_myhostname: mail.green.local
+postfix_mydomain: green.local
+postfix_home_mailbox: mail/
+
+#Alfa1 Gebruikers
+ldap_fqdn1: alfa1.green.local
+ldap_ou: Afdelingen
+ldap_dcname: alfa1
+ldap_domainname: green
+ldap_root_domain: local
+postfix_ldap: true
+
+Squirrelmail_domain: green.local
+Squirrelmail_imapServerAddress: delta1
+Squirrelmail_smtpServerAddress: delta1
+Squirrelmail_imap_port: 143
+Squirrelmail_smtp_port: 587

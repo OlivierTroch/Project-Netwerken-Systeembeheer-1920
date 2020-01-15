@@ -1,0 +1,7 @@
+- name: deploy nginx
+  import_tasks: deploy_nginx.yml
+  tags: nginx
+
+- name: deploy nginx exporter
+  import_tasks: deploy_nginx_exporter.yml
+  tags: nginx_exporter

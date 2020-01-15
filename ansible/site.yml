@@ -1,0 +1,5 @@
+# site.yml
+---
+- import_playbook: switches.yml
+- import_playbook: routers.yml
+- import_playbook: servers.yml

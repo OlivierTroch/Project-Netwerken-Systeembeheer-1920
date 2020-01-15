@@ -1,0 +1,5 @@
+# OpenLDAP server IP address
+openldap_server_address: 172.16.1.65
+
+# OpenLDAP domain name
+openldap_server_domain_name: green.local

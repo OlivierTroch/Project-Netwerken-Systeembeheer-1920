@@ -1,0 +1,22 @@
+---
+#
+# Do not edit manually, this file is managed using automation tools
+#
+mappings:
+{% if prometheus_graphite_exporter_cfg is defined %}
+  {{ prometheus_graphite_exporter_cfg | to_nice_yaml(width=80, indent=2) | indent(2) }}
+{% else %}
+  - match: test.dispatcher.*.*.*
+    name: dispatcher_events_total
+    labels:
+      action: $2
+      job: test_dispatcher
+      outcome: $3
+      processor: $1
+  - match: '*.signup.*.*'
+    name: signup_events_total
+    labels:
+      job: ${1}_server
+      outcome: $3
+      provider: $2
+{% endif %}

@@ -1,0 +1,21 @@
+#papa1 vars
+---
+pxe_server_kickstart_listen: "172.16.1.6:8188"
+pxe_server_kickstart_default_menu: 
+  "Install CentOS8": "centos8.cfg"
+pxe_server_kickstart_default_menu_fedora:
+  "Install Fedora Workstation": "fedora.cfg"
+pxe_server_kickstart_iso_file_path: /vagrant/ansible/roles/papa1-pxeserver/files/CentOS8.iso
+pxe_server_kickstart_iso_file_path_fedora: /vagrant/ansible/roles/papa1-pxeserver/files/Fedora_Workstation.iso
+pxe_server_kickstart_iso_mount_path: /var/www/html/centos8
+pxe_server_kickstart_iso_mount_path_fedora: /var/www/html/fedora
+#dhcp config to be added to dhcp server later on (see template)
+dhcpd_bind_interface: eth1
+dhcpd_subnets:
+  - subnet: 172.16.1.0
+    routers: 172.16.1.1
+    netmask: 255.255.255.0
+    next_server: 172.16.1.6
+    range: "172.16.1.30 172.16.1.50"
+    options:
+      filename: centos/pxelinux.0

@@ -1,0 +1,29 @@
+---
+
+# Main tasks file for lynis role
+
+- name: 'INIT | Manage variables to use for our target'
+  import_tasks: "{{ role_path }}/tasks/manage_variables.yml"
+  tags:
+    - 'role::lynis'
+    - 'role::lynis::config'
+    - 'role::lynis::init'
+    - 'role::lynis::install'
+
+
+- name: 'INSTALL | Manage Lynis install from git'
+  become: True
+  import_tasks: "{{ role_path }}/tasks/install/from_git.yml"
+  when: "lynis_installation_type == 'git'"
+  tags:
+    - 'role::lynis'
+    - 'role::lynis::install'
+
+
+- name: 'CONFIG | Manage crontab tasks'
+  become: True
+  import_tasks: "{{ role_path }}/tasks/manage_crontab.yml"
+  when: "lynis_manage_crontab | bool"
+  tags:
+    - 'role::lynis'
+    - 'role::lynis::config'

@@ -1,0 +1,59 @@
+---
+- name: Merge any additional labels into global tgroup labels
+  set_fact:
+    prometheus_node_tgroup_labels: '{{ prometheus_tgroup_labels | combine(prometheus_additional_tgroup_labels | default({})) }}'
+
+- name: 'Create managed tgroup directory: {{ prometheus_managed_tgroup_dir }}'
+  become: true
+  delegate_to: '{{ prometheus_server_name }}'
+  run_once: true
+  file:
+    path: '{{ prometheus_managed_tgroup_dir }}'
+    state: directory
+    owner: '{{ prometheus_tgroup_owner }}'
+    group: '{{ prometheus_tgroup_group }}'
+    mode: '{{ prometheus_tgroup_mode }}'
+  loop_control:
+    loop_var: prometheus_server_name
+  with_items: '{{ prometheus_servers | list }}'
+
+- name: Include task to create {{ prometheus_software_name }} tgroup file (client mode)
+  include_tasks: _setup_client_tgroup_file.yml
+  # Hack as this item needs to run serially. OpenSSH won't put up with dozens
+  # of simultaneous connections
+  with_items: "['{{ prometheus_client_inventory_hostname }}',]"
+  loop_control:
+    loop_var: prometheus_host_item
+  when:
+    - prometheus_tgroup_client_mode is defined and prometheus_tgroup_client_mode|bool
+    - "hostvars[prometheus_host_item].inventory_hostname == inventory_hostname"
+
+- name: Include task to create {{ prometheus_software_name }} tgroup file (server mode)
+  include_tasks: _setup_client_tgroup_file.yml
+  when: prometheus_tgroup_client_mode is undefined or not prometheus_tgroup_client_mode|bool
+
+- block:
+    - name: Find existing host tgroup files
+      find:
+        paths: '{{ prometheus_managed_tgroup_dir }}'
+        file_type: file
+        recurse: false
+        patterns: '{{ prometheus_client_fqdn }}-*'
+        # Merge exporter names in 'prometheus_additional_exporters' and 'hostvars[prometheus_client_inventory_hostnam].prometheus_components', then prepend the hostname and append '.yml'
+        excludes: '{{ (prometheus_additional_exporters | default({}) | map(attribute="name") | list + hostvars[prometheus_client_inventory_hostname].prometheus_components) | map("regex_replace", "^", prometheus_client_fqdn + "-") | map("regex_replace", "$", ".yml") | list }}'
+      register: host_orphan_tgroup_files
+
+    - name: Remove orphan tgroup files
+      # Remove paths flagged for deletion above
+      become: true
+      file:
+        path: '{{ prometheus_group_cleanup.path }}'
+        state: absent
+      with_items: '{{ host_orphan_tgroup_files.files }}'
+      loop_control:
+        loop_var: prometheus_group_cleanup
+      when: host_orphan_tgroup_files.files | length >= 1
+
+    - name: Define tgroup dir purge for as done
+      set_fact: {"prometheus_tgroup_dir_purged_{{ prometheus_client_fqdn | hash('sha1') }}": true}
+  when: prometheus_tgroup_dir_purge_orphans|bool and not lookup('vars', 'prometheus_tgroup_dir_purged_' + prometheus_client_fqdn | hash('sha1'), default=false)

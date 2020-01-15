@@ -1,0 +1,5 @@
+- name: basic configuration
+  import_tasks: basic_configuration.yml
+
+- name: deploy node exporter
+  import_tasks: node_exporter.yml

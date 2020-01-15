@@ -1,0 +1,110 @@
+---
+# This task must be run before any action and should only be run once
+- name: Gather Operating System specific variables
+  include_vars: '{{ os_var_file }}'
+  loop_control:
+    loop_var: os_var_file
+  with_first_found:
+    - 'distribution/{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yml'
+    - 'distribution/{{ ansible_distribution }}-{{ ansible_distribution_version }}.yml'
+    - 'distribution/{{ ansible_distribution }}.yml'
+    - 'os/{{ ansible_os_family }}-{{ ansible_distribution_major_version }}.yml'
+    - 'os/{{ ansible_os_family }}.yml'
+  tags: vars
+
+- block:
+    - name: Include role mesaguy.prometheus setup package manager
+      include_tasks: '_setup_pkg_mgr_{{ ansible_os_family }}.yml'
+      when: ansible_os_family in prometheus_software_setup_pkg_mgrs
+
+    - name: Define package manager as setup
+      set_fact:
+        prometheus_setup_pkg_mgr_executed: true
+
+    - name: Install prometheus prerequisite utilities
+      become: true
+      package:
+        name: '{{ prometheus_prerequisite_packages }}'
+        state: present
+      when: prometheus_prerequisite_packages is defined
+
+    - name: Install 'sponge'
+      become: true
+      package:
+        name: '{{ prometheus_sponge_packages }}'
+        state: present
+      when: prometheus_sponge_packages is defined and prometheus_install_sponge
+
+    - name: Warn that 'sponge' cannot be installed
+      debug:
+        msg: "'sponge' cannot be installed because no 'prometheus_sponge_packages' variable has been defined"
+      when: prometheus_sponge_packages is undefined
+
+  when: prometheus_prerequisite_packages is defined or prometheus_install_sponge
+
+- name: Add the group "{{ prometheus_group }}"
+  become: true
+  group:
+    name: '{{ prometheus_group }}'
+    gid: '{{ prometheus_gid | default(omit) }}'
+  when: prometheus_manage_group|bool
+
+- name: Add the user "{{ prometheus_user }}"
+  become: true
+  user:
+    name: '{{ prometheus_user }}'
+    comment: Prometheus User
+    uid: '{{ prometheus_uid | default(omit) }}'
+    group: '{{ prometheus_group }}'
+    shell: '{{ prometheus_shell }}'
+  when: prometheus_manage_user|bool
+
+- name: 'Setup prometheus install root directory: "{{ prometheus_root_dir }}"'
+  become: true
+  file:
+    path: '{{ prometheus_root_dir }}'
+    state: directory
+    mode: '0755'
+    owner: root
+    group: '{{ prometheus_group }}'
+
+- name: Setup prometheus base directories owned by "root"
+  become: true
+  file:
+    path: '{{ root_base_directory }}'
+    state: directory
+    mode: '0755'
+    owner: root
+    group: '{{ prometheus_group }}'
+  loop_control:
+    loop_var: root_base_directory
+  with_items:
+    - '{{ prometheus_etc_dir }}'
+    - '{{ prometheus_exporters_dir }}'
+    - '{{ prometheus_script_directory }}'
+
+- name: Link {{ prometheus_etc_dir }} to /etc/prometheus (Optional)
+  become: true
+  file:
+    src: '{{ prometheus_etc_dir }}'
+    dest: '/etc/prometheus'
+    owner: root
+    group: '{{ prometheus_group }}'
+    state: link
+    force: '{{ prometheus_link_etc_force }}'
+  when: prometheus_link_etc|bool and prometheus_etc_dir != '/etc/prometheus'
+
+- name: 'Setup prometheus base directories owned by "{{ prometheus_user }}"'
+  become: true
+  file:
+    path: '{{ prometheus_base_directory }}'
+    state: directory
+    mode: '0755'
+    owner: '{{ prometheus_user }}'
+    group: '{{ prometheus_group }}'
+  loop_control:
+    loop_var: prometheus_base_directory
+  with_items:
+    - '{{ prometheus_log_dir }}'
+    - '{{ prometheus_tmp_dir }}'
+    - '{{ prometheus_var_dir }}'

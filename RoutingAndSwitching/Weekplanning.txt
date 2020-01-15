@@ -1,0 +1,10 @@
+Week 4:
+Afwerken netwerk: ACL en DHCP relay.
+Research VPN tunnel
+
+Week 5:
+Packettracer samenstellen met Windows kant
+Configuratie fysieke toestellen
+
+Week 6:
+Configuratie fysieke toestellen en testen

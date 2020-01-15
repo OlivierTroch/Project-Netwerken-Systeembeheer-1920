@@ -1,0 +1,14 @@
+---
+# defaults file for bertvv.squirrelmail
+
+Squirrelmail_OrganizationName: SquirrelMail
+Squirrelmail_signOutPage: /webmail
+Squirrelmail_webpage_directory: /var/www/squirrelmail
+Squirrelmail_domain: localhost
+Squirrelmail_sendmail: false
+Squirrelmail_imapServerAddress: localhost
+Squirrelmail_smtpServerAddress: localhost
+Squirrelmail_serverType: dovecot
+Squirrelmail_defaultLanguage: en_US
+Squirrelmail_imap_port: 143
+Squirrelmail_smtp_port: 25

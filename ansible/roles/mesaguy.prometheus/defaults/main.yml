@@ -1,0 +1,142 @@
+---
+# defaults file for mesaguy.prometheus
+
+# General global configuration
+prometheus_go_version: 1.13.1
+prometheus_link_etc: true
+prometheus_link_etc_force: false
+prometheus_purge_orphans: false
+prometheus_install_sponge: false
+prometheus_root_dir: '/opt/prometheus'
+prometheus_test_service_port: true
+
+# If yes, perform a connection test from the server to the client
+prometheus_software_server_side_connect_test: false
+
+# Symlink tools (amtool, promtool, etc) to /usr/local/bin
+prometheus_symlink_tools: true
+
+# User management
+prometheus_manage_group: true
+prometheus_manage_user: true
+prometheus_group: prometheus
+prometheus_user: prometheus
+
+# Prometheus logrotate
+prometheus_logrotate: false
+prometheus_logrotate_count: 31
+prometheus_logrotate_compress: true
+prometheus_logrotate_dir: /etc/logrotate.d
+
+# Firewall management
+prometheus_manage_client_firewalld: false
+prometheus_manage_client_iptables: false
+prometheus_manage_client_iptables_raw: false
+prometheus_server_ips: []
+prometheus_firewalld_zone: public
+
+# When performing installations
+prometheus_default_binary_unarchive_opts:
+ - '--strip-components=1'
+prometheus_default_src_unarchive_opts:
+ - '--strip-components=1'
+prometheus_fallback_to_build: false
+prometheus_java_path: /usr/bin/java
+prometheus_software_make_command: 'go get -d && go build'
+prometheus_software_makefile_make_command: 'make'
+prometheus_software_setup_pkg_mgrs:
+ - 'Alpine'
+ - 'Archlinux'
+ - 'Gentoo'
+
+# Base directories
+prometheus_etc_dir: '{{ prometheus_root_dir }}/etc'
+prometheus_exporters_dir: '{{ prometheus_root_dir }}/exporters'
+prometheus_go_dir: '{{ prometheus_root_dir }}/go'
+prometheus_log_dir: '/var/log/prometheus'
+prometheus_tmp_dir: '{{ prometheus_root_dir }}/tmp'
+prometheus_var_dir: '{{ prometheus_root_dir }}/var'
+
+# Local Prometheus source directory
+prometheus_software_local_src_dir: '{{ lookup("env", "HOME") }}/prometheus_src'
+
+# Application directories
+prometheus_tgroup_dir: '{{ prometheus_etc_dir }}/tgroups'
+prometheus_tgroup_dir_purge_orphans: false
+prometheus_tgroup_owner: '{{ prometheus_user }}'
+prometheus_tgroup_group: '{{ prometheus_group }}'
+prometheus_tgroup_mode: '0775'
+prometheus_tgroup_use_facts: false
+
+# tgroup settings to be overridden on a node-by-node basis
+prometheus_tgroup_labels: {}
+prometheus_manage_client_tgroups: false
+prometheus_manage_server_tgroups: false
+prometheus_manage_server_tgroups_only: false
+prometheus_managed_tgroup_dir: '{{ prometheus_tgroup_dir }}'
+
+# Create a PID file when using systemd. This can be useful for kill -HUP
+# scripts. However, older versions of systemd (ie: EL7) have a bug which causes
+# daemons to occasionally crash on start/restart:
+# https://bugzilla.redhat.com/show_bug.cgi?id=1226509
+prometheus_systemd_pid: false
+
+
+# Directories to install scripts into
+prometheus_script_directory: '{{ prometheus_root_dir }}/scripts'
+prometheus_script_apt: false
+prometheus_script_apt_commit: '03f0b4db9fc49f0c888d469ed142ed89233f08c3'
+prometheus_script_apt_checksum: 'sha256:9817587b3eef34d8d9ead97ff3a7c45cedbec2107c3d9dbdfc9e9f06b06f7d12'
+prometheus_script_btrfs_stats: false
+prometheus_script_btrfs_stats_commit: 'dfb6002fad073a66f0439e0d620f4e4a8e963ec2'
+prometheus_script_btrfs_stats_checksum: 'sha256:1677b3c8aa99fd84fd626667b4b94fcc506e551288f8fe0316e27ef9d7a3554a'
+prometheus_script_deleted_libraries: false
+prometheus_script_deleted_libraries_commit: '2d5fcdeef431a92b72c0a119912111bb9faa331f'
+prometheus_script_deleted_libraries_checksum: 'sha256:37d4466bb1e0f773aa0aa1952cae3fc97f8d8519b4657aad1b520ae624cd7a6b'
+prometheus_script_directory_size: false
+prometheus_script_directory_size_commit: '578d81474449b6a7957dcf29fc854ba00e637265'
+prometheus_script_directory_size_checksum: 'sha256:3311d2a14294787616d1ffbe29eebdb444a651ab6df7c138fea1b8a7a76d21b9'
+prometheus_script_inotify_instances: false
+prometheus_script_inotify_instances_commit: 'd546916c6b686bb42fd115f4122ec59938a37137'
+prometheus_script_inotify_instances_checksum: 'sha256:d2354d2cfe5c4812eaa6fd94e6b7433a85fd83707bfaea18f06f6c96f7d71329'
+prometheus_script_ipmitool: false
+prometheus_script_ipmitool_commit: '83c9b117471dba863619886f2d30ff4ef92ff7b4'
+prometheus_script_ipmitool_checksum: 'sha256:9e79cca48fefe21d9bb01d56030c71a37b9a17dd63ea3ff8da9ddac93d8c8125'
+prometheus_script_md_info: false
+prometheus_script_md_info_commit: '9e0aee8ae7db3e012af30dd43c77535375811d1c'
+prometheus_script_md_info_checksum: 'sha256:0dcfb6fb5b79f2870801fd2289a7b227f79c5b2113041215ee82473890a0286f'
+prometheus_script_md_info_detail: false
+prometheus_script_md_info_detail_commit: 'bd3fc09b30e9401746f76d0d3980a3e894c5d012'
+prometheus_script_md_info_detail_checksum: 'sha256:ca1764367cdb7954a7741ce5657cbd5002b08a9abde4617da430afee6b46e571'
+prometheus_script_mellanox_hca_temp: false
+prometheus_script_mellanox_hca_temp_commit: '2d5fcdeef431a92b72c0a119912111bb9faa331f'
+prometheus_script_mellanox_hca_temp_checksum: 'sha256:ad306bab5b1872d66be066eeeb355a38935bcbf9f3670a80697992e42eabb83f'
+prometheus_script_multipathd_info: false
+prometheus_script_multipathd_info_commit: 'e972e38b423632a4f45326bd33eb127a4935f1f6'
+prometheus_script_multipathd_info_checksum: 'sha256:6fd9e997b6443d451e1ee47cb9315a6371d1fe078281f5bfaeb6f91335e81424'
+prometheus_script_ntpd_metrics: false
+prometheus_script_ntpd_metrics_commit: '58c10628d86fa5ce6f2e57f59d7d3cbe401a5bf9'
+prometheus_script_ntpd_metrics_checksum: 'sha256:0088efb3749727f5d68e098cbcb352a713935f128613ba18cb05c46fc0ae6d22'
+prometheus_script_nvme_metrics: false
+prometheus_script_nvme_metrics_commit: 'fc02b5dfbc32f12c8408e7baa2e65c6077089d85'
+prometheus_script_nvme_metrics_checksum: 'sha256:d5d486bc4f326417f8b4abdbc6819c2523e825995cddfdc436a454214270eff0'
+prometheus_script_pacman: false
+prometheus_script_pacman_commit: '29d4629f55603001e25fea65e8cb593b86e58f47'
+prometheus_script_pacman_checksum: 'sha256:8a5b3c8b0d66380e29ae0ac29ae1617be0d4d26b8809627ca54f9b6a51f15d5a'
+prometheus_script_smartmon: false
+prometheus_script_smartmon_commit: 'fc02b5dfbc32f12c8408e7baa2e65c6077089d85'
+prometheus_script_smartmon_checksum: 'sha256:460a5bd5fc1ac20dff2db8700bb75c8c78677862d6f094bd1a0347130e536224'
+prometheus_script_smartmon_python: false
+prometheus_script_smartmon_python_commit: '5110efc1cddecb02a66f2048ed8339c51d6615e0'
+prometheus_script_smartmon_python_checksum: 'sha256:438f4eb3097236a228ed164b8614394a1452fcf0ad3833dbab9c13e811bf4481'
+prometheus_script_storcli: false
+prometheus_script_storcli_commit: 'b4cc81834734e81d0397719c14ddd4853e0cc98f'
+prometheus_script_storcli_checksum: 'sha256:4f68e6e6b4591ee689aafc56c2bd7a80f99baa908bc2e7bedf4c9f44bf5bc571'
+prometheus_script_yum: false
+prometheus_script_yum_commit: '19e5bb6abdfbc69e9f2039485842eb3c0cf87d08'
+prometheus_script_yum_checksum: 'sha256:2da2cf3efe55379a117e809046b0dacb1b46265c8ebce208b26dded6a0ff249d'
+
+# For use when testing
+prometheus_script_enable_all: false
+prometheus_software_service_test: true
+prometheus_always_build_from_source: false

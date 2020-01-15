@@ -1,0 +1,70 @@
+# roles/rh-base/defaults/main.yml
+---
+
+# Package management
+rhbase_enable_repos: []
+rhbase_install_packages: []
+rhbase_remove_packages: []
+rhbase_repo_exclude: []
+rhbase_repo_gpgcheck: false
+rhbase_repo_installonly_limit: 3
+rhbase_repo_remove_dependencies: true
+rhbase_repo_exclude_from_update: []
+rhbase_repositories: []
+rhbase_update: false
+
+rhbase_repo_update_type: default
+rhbase_repo_random_sleep: 360
+rhbase_repo_updates_download: true
+rhbase_repo_updates_apply: true
+rhbase_repo_emit_via: stdio
+rhbase_repo_email_from: root@localhost
+rhbase_repo_email_to: root
+rhbase_repo_email_host: localhost
+
+# Configuration
+rhbase_override_firewalld_zones: false
+rhbase_hosts_entry: false
+rhbase_motd: false
+rhbase_tz: :/etc/localtime
+rhbase_dynamic_motd: false
+rhbase_ssh_hostbasedauthentication: 'no'
+rhbase_ssh_ignorerhosts: 'yes'
+rhbase_ssh_permitemptypasswords: 'no'
+rhbase_ssh_protocol_version: 2
+rhbase_ssh_rhostsrsaauthentication: 'no'
+
+# Services
+rhbase_start_services: []
+rhbase_stop_services: []
+
+# Security
+rhbase_firewall_allow_services: []
+rhbase_firewall_allow_ports: []
+rhbase_firewall_interfaces: []
+rhbase_selinux_state: enforcing
+rhbase_selinux_booleans: []
+
+# Users
+rhbase_users: []
+rhbase_user_groups: []
+rhbase_ssh_allow_groups: []
+
+# Yum-cron
+rhbase_automatic_updates: false
+rhbase_yum_cron_update_level: default
+rhbase_yum_cron_update_messages: yes
+rhbase_yum_cron_download_updates: yes
+rhbase_yum_cron_install_updates: yes
+rhbase_yum_cron_sleep_time: 360
+rhbase_yum_cron_system_name: "{{ ansible_hostname }}"
+rhbase_yum_cron_message_protocol: stdio
+rhbase_yum_cron_email_from: root@localhost
+rhbase_yum_cron_email_to: root
+rhbase_yum_cron_email_host: localhost
+rhbase_yum_cron_hourly_update_level: minimal
+rhbase_yum_cron_hourly_update_messages: yes
+rhbase_yum_cron_hourly_download_updates: yes
+rhbase_yum_cron_hourly_install_updates: no
+rhbase_yum_cron_hourly_sleep_time: 15
+rhbase_yum_cron_hourly_message_protocol: stdio

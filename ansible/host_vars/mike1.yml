@@ -1,0 +1,9 @@
+drupal_domain: green.local
+database_host: '172.16.1.4'
+database: drupal_mike1
+database_user: mike1_user
+database_password: mike1
+
+drupal_site: Mike1
+drupal_account_name: admin_mike1
+drupal_account_pass: admin

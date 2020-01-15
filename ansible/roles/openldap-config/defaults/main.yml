@@ -1,0 +1,28 @@
+---
+# defaults file for net2grid.openldap_config
+
+default_user_password: password123
+
+openldap_create_organizationalunits:
+  - Customers
+  - Groups
+  - People
+
+openldap_create_groups:
+  - name: my_group
+    gid: 1001
+    memberuid: uid
+    group_ou: ou=Groups
+
+openldap_create_users:
+  - name: remco
+    cn: Remco Brink
+    sn: Brink
+    password: remco
+    email: remco@net2grid.com
+    group_ou: ou=People
+
+openldap_add_uniquemember:
+  - name: remco
+    member_dn: uid=remco,ou=People
+    group_dn: cn=default-users,ou=Customers

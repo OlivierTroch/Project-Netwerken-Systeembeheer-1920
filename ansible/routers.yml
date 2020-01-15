@@ -1,0 +1,4 @@
+# routers.yml
+---
+- hosts: all
+  roles: []

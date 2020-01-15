@@ -1,0 +1,72 @@
+- name: Install policycoreutils-python
+  yum:
+    name: policycoreutils-python
+    state: present
+
+- name: Allow nginx to connect to db
+  seboolean:
+    name: httpd_can_network_connect_db
+    state: yes
+    persistent: yes
+
+- name: Allow nginx to modify files in /usr/share/nginx/html/drupal/web/sites/default/files
+  sefcontext:
+    target: '/usr/share/nginx/html/drupal/web/sites/default/files(/.*)?'
+    setype: httpd_sys_rw_content_t
+    state: present
+
+- name: Put SELinux in permissive mode, logging actions that would be blocked.
+  selinux:
+    policy: targeted
+    state: permissive
+
+- name: Disable selinux
+  command: setenforce 0
+
+- name: Enable Software Collections
+  yum:
+    name: centos-release-scl-rh
+    state: present
+
+- name: Install required packages necessary for drupal 8
+  yum:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ required_packages }}"
+
+- name: Link rh-php72 to php
+  file:
+    src: /opt/rh/rh-php72/root/usr/bin/php
+    dest: /usr/bin/php
+    state: link
+
+- name: Copy www.conf
+  copy:
+    src: www.conf
+    dest: /etc/opt/rh/rh-php72/php-fpm.d/www.conf
+  notify:
+    - restart php-fpm
+
+- name: Get composer installer
+  get_url:
+    url: "{{ composer_url }}"
+    dest: "/tmp/composer-setup.php"
+
+- name: Install composer
+  command: "php /tmp/composer-setup.php --install-dir={{ composer_path }} --filename=composer"
+  
+- name: Create drupal directory
+  file:
+    path: "{{ drupal_directory }}"
+    state: directory
+
+- name: Create drupal project with composer
+  command: "{{ composer_path }}/composer create-project {{ drupal_version }} {{ drupal_directory }} --no-interaction"
+  args:
+    chdir: "{{ drupal_directory }}"
+ 
+- name: Install drupal
+  command: "{{ drupal_directory }}/vendor/bin/drush --root={{ drupal_directory }} site-install -y --site-name={{ drupal_site }} --account-name={{ drupal_account_name }} --account-pass={{ drupal_account_pass }} --db-url=mysql://{{ database_user }}:{{ database_password }}@{{ database_host }}/{{ database }}"
+  args:
+    chdir: "{{ drupal_directory }}"
+  

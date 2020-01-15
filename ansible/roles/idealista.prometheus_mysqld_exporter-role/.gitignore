@@ -1,0 +1,10 @@
+tests/cache
+tests/playbook.retry
+tests/__pycache__
+.molecule
+.cache
+.vagrant
+tests/roles
+*.iml
+.idea/
+.python-version

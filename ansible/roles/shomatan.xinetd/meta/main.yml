@@ -1,0 +1,12 @@
+galaxy_info:
+  author: Shoma Nishitateno
+  description: Installs xinetd.
+  license: license BSD
+  min_ansible_version: 1.8
+  platforms:
+    - name: EL
+      versions:
+        - all
+  galaxy_tags: []
+
+dependencies: []

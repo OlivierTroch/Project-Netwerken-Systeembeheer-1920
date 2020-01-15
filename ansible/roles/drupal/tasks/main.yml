@@ -1,0 +1,3 @@
+- name: deploy drupal
+  import_tasks: deploy_drupal.yml
+  tags: nginx

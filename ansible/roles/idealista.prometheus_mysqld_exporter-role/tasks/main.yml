@@ -1,0 +1,16 @@
+---
+
+- name: MYSQLD_EXPORTER | Install
+  include_tasks: install.yml
+  tags:
+    - mysqld-exporter-install
+
+- name: MYSQLD_EXPORTER | Configure
+  include_tasks: config.yml
+  tags:
+    - mysqld-exporter-configure
+
+- name: MYSQLD_EXPORTER | Service
+  include_tasks: service.yml
+  tags:
+    - mysqld-exporter-service

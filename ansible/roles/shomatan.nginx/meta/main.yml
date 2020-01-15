@@ -1,0 +1,24 @@
+---
+
+galaxy_info:
+  author: shomatan
+  description: Nginx installation for Linux.
+  company:
+  license: "license MIT"
+  min_ansible_version: 1.8
+  platforms:
+    - name: Ubuntu
+      versions:
+      - all
+    - name: Debian
+      versions:
+      - all
+    - name: EL
+      versions:
+      - 6
+      - 7
+  galaxy_tags:
+    - development
+    - web
+
+dependencies: []

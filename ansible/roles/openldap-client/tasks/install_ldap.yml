@@ -1,0 +1,10 @@
+---
+
+- name: Add the OS specific variables
+  include_vars: "{{ ansible_os_family }}.yml"
+
+- name: Install the OpenLDAP and required packages for Red Hat/CentOS
+  yum:
+    name: "{{ openldap_client_pkgs }}"
+    state: present
+  when: ansible_os_family == 'RedHat'

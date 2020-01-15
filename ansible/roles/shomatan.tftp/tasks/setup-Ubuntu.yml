@@ -1,0 +1,7 @@
+---
+- name: Ubuntu | Ensure tftpd-hpa is installed.
+  apt: name=tftpd-hpa state=present
+
+# service
+- name: Ubuntu | Ensure tftpd-hpa is started and enabled to start at boot.
+  service: name=tftpd-hpa state=started enabled=yes

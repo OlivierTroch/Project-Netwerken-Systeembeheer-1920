@@ -1,0 +1,20 @@
+drupal_domain: example.com
+drupal_directory: /usr/share/nginx/html/drupal
+
+required_packages: 
+  - rh-php72
+  - rh-php72-php-fpm
+  - rh-php72-php-mysqlnd
+  - rh-php72-php-opcache
+  - rh-php72-php-mbstring
+  - rh-php72-php-gd
+  - git
+
+composer_url: "https://getcomposer.org/installer"
+composer_checksum: "sha384:a5c698ffe4b8e849a443b120cd5ba38043260d5c4023dbf93e1558871f1f07f58274fc6f4c93bcfd858c6bd0775cd8d1"
+composer_path: /usr/local/bin
+
+drupal_version: drupal-composer/drupal-project:8.x-dev
+drupal_site: default
+drupal_account_name: admin
+drupal_account_pass: admin

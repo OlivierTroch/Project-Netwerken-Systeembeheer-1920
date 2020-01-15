@@ -1,0 +1,8 @@
+#Repository variebles MariaDB 10.4
+repo: "http://yum.mariadb.org/10.4/centos7-amd64"
+key: "https://yum.mariadb.org/RPM-GPG-KEY-MariaDB"
+#
+packages:
+  - rsync
+#
+service_db: mariadb

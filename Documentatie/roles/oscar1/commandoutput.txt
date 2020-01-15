@@ -1,0 +1,210 @@
+vagrant up oscar1
+Bringing machine 'oscar1' up with 'virtualbox' provider...
+==> oscar1: Importing base box 'bento/centos-7.6'...
+==> oscar1: Matching MAC address for NAT networking...
+==> oscar1: Checking if box 'bento/centos-7.6' version '201907.24.0' is up to date...
+==> oscar1: Setting the name of the VM: p3ops-1920-green_oscar1_1570198861081_64926
+==> oscar1: Fixed port collision for 22 => 2222. Now on port 2200.
+==> oscar1: Clearing any previously set network interfaces...
+==> oscar1: Preparing network interfaces based on configuration...
+    oscar1: Adapter 1: nat
+    oscar1: Adapter 2: hostonly
+==> oscar1: Forwarding ports...
+    oscar1: 22 (guest) => 2200 (host) (adapter 1)
+==> oscar1: Running 'pre-boot' VM customizations...
+==> oscar1: Booting VM...
+==> oscar1: Waiting for machine to boot. This may take a few minutes...
+    oscar1: SSH address: 127.0.0.1:2200
+    oscar1: SSH username: vagrant
+    oscar1: SSH auth method: private key
+    oscar1: Warning: Connection reset. Retrying...
+    oscar1: Warning: Remote connection disconnect. Retrying...
+    oscar1: Warning: Connection reset. Retrying...
+    oscar1: Warning: Remote connection disconnect. Retrying...
+    oscar1: Warning: Connection reset. Retrying...
+    oscar1: Warning: Remote connection disconnect. Retrying...
+    oscar1: 
+    oscar1: Vagrant insecure key detected. Vagrant will automatically replace
+    oscar1: this with a newly generated keypair for better security.
+    oscar1: 
+    oscar1: Inserting generated public key within guest...
+    oscar1: Removing insecure key from the guest if it's present...
+    oscar1: Key inserted! Disconnecting and reconnecting using new SSH key...
+==> oscar1: Machine booted and ready!
+==> oscar1: Checking for guest additions in VM...
+==> oscar1: Setting hostname...
+==> oscar1: Configuring and enabling network interfaces...
+==> oscar1: Mounting shared folders...
+    oscar1: /vagrant => /home/maarten/git/p3ops-1920-green
+==> oscar1: Running provisioner: ansible...
+    oscar1: Running ansible-playbook...
+
+PLAY [all] *********************************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [oscar1]
+
+PLAY [all] *********************************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [oscar1]
+
+PLAY [oscar1] ******************************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [oscar1]
+
+TASK [oscar1 : Gather variables for each operating system] *********************
+ok: [oscar1] => (item=/home/maarten/git/p3ops-1920-green/ansible/roles/oscar1/vars/redhat.yml)
+
+TASK [oscar1 : Assert usage of systemd as an init system] **********************
+ok: [oscar1] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+
+TASK [oscar1 : Get systemd version] ********************************************
+ok: [oscar1]
+
+TASK [oscar1 : Set systemd version fact] ***************************************
+ok: [oscar1]
+
+TASK [oscar1 : Assert no duplicate config flags] *******************************
+ok: [oscar1] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+
+TASK [oscar1 : Assert external_labels aren't configured twice] *****************
+ok: [oscar1] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+
+TASK [oscar1 : Set prometheus external metrics path] ***************************
+ok: [oscar1]
+
+TASK [oscar1 : Fail when prometheus_config_flags_extra duplicates parameters set by other variables] ***
+skipping: [oscar1] => (item=storage.tsdb.retention) 
+skipping: [oscar1] => (item=storage.tsdb.path) 
+skipping: [oscar1] => (item=storage.local.retention) 
+skipping: [oscar1] => (item=storage.local.path) 
+skipping: [oscar1] => (item=config.file) 
+skipping: [oscar1] => (item=web.listen-address) 
+skipping: [oscar1] => (item=web.external-url) 
+
+TASK [oscar1 : Get all file_sd files from scrape_configs] **********************
+ok: [oscar1]
+
+TASK [oscar1 : Fail when file_sd targets are not defined in scrape_configs] ****
+skipping: [oscar1] => (item={'key': 'node', 'value': [{'targets': ['172.16.1.5:9100'], 'labels': {'env': 'demosite'}}]}) 
+
+TASK [oscar1 : Alert when prometheus_alertmanager_config is empty, but prometheus_alert_rules is specified] ***
+ok: [oscar1] => {
+    "msg": "No alertmanager configuration was specified. If you want your alerts to be sent make sure to specify a prometheus_alertmanager_config in defaults/main.yml.\n"
+}
+
+TASK [oscar1 : Get latest release] *********************************************
+skipping: [oscar1]
+
+TASK [oscar1 : Set prometheus version to {{ _latest_release.json.tag_name[1:] }}] ***
+skipping: [oscar1]
+
+TASK [oscar1 : Get checksum for amd64 architecture] ****************************
+skipping: [oscar1] => (item=477216d1a8c93f9e2575260ee8c8f7db416d300a4210d9109db1f06fe4a7f221  prometheus-2.12.0.darwin-386.tar.gz) 
+skipping: [oscar1] => (item=bb3cd88d05162be6d05c0c60308af37c94f82b505eabfb9a4ec3f671c7da0a1f  prometheus-2.12.0.darwin-amd64.tar.gz) 
+skipping: [oscar1] => (item=e117abe3651823101c9fd0c96fc859e227975140e374622d205e82b51cc2ff83  prometheus-2.12.0.dragonfly-amd64.tar.gz) 
+skipping: [oscar1] => (item=de81a7df76efc499c24215fd16357b35080308100d271ba7b5b0863f7773a578  prometheus-2.12.0.freebsd-386.tar.gz) 
+skipping: [oscar1] => (item=67a3ad52999414fed086ae546f7eff1557d799681513e74a63bc5d9e9e5d24a7  prometheus-2.12.0.freebsd-amd64.tar.gz) 
+skipping: [oscar1] => (item=0fe0b13efefca0befec66036cb6ff15ba07f6fff9d5554bdddd03585d9eb84e3  prometheus-2.12.0.freebsd-armv6.tar.gz) 
+skipping: [oscar1] => (item=44b1c51fa22cd3d95e78af5aa8bcc2dc9acf1122b2893801080da27e788e5dc5  prometheus-2.12.0.freebsd-armv7.tar.gz) 
+skipping: [oscar1] => (item=11679fa39f564a973f41d6968ad22c45565fdfa9309f4157e833842905a03334  prometheus-2.12.0.linux-386.tar.gz) 
+ok: [oscar1] => (item=b9f57b6e64fb3048742cfa7dbcc727e1df906d8020ef246a5e81b7959ae97e08  prometheus-2.12.0.linux-amd64.tar.gz)
+skipping: [oscar1] => (item=24c7bbd2fd9d5ece2c24d33b408201b57e3248eee76cb04b31426c308f996609  prometheus-2.12.0.linux-arm64.tar.gz) 
+skipping: [oscar1] => (item=59f64f82facb7ddd826e431b67de3f4cfaf44e6cb99a4bab7e078824b40c444e  prometheus-2.12.0.linux-armv5.tar.gz) 
+skipping: [oscar1] => (item=5213ad40190df9dd9d5c794d1005a3d4e65ad15966f460729700bde6b819bd69  prometheus-2.12.0.linux-armv6.tar.gz) 
+skipping: [oscar1] => (item=30cc6cea00eeced2cfd2bd0326f52fe52dd4e6782ae0891cb31be13441536ef0  prometheus-2.12.0.linux-armv7.tar.gz) 
+skipping: [oscar1] => (item=c811bec7e9a14267c14ef78b1171831c061a39401f7577dafa4dc0033aa14fbe  prometheus-2.12.0.linux-mips64.tar.gz) 
+skipping: [oscar1] => (item=a01fd13930827c5b077213d444ff0a50948ae819ce75431a22d68b47bbb07537  prometheus-2.12.0.linux-mips64le.tar.gz) 
+skipping: [oscar1] => (item=a533d129d3c419cffa9814c18f2a556f3eeb6c5e50da254b775b3562e810d2d2  prometheus-2.12.0.linux-ppc64.tar.gz) 
+skipping: [oscar1] => (item=4cbcb56d30e6ab7683d28de9c25645733864417199e4e50ab36090d7cc9d8499  prometheus-2.12.0.linux-ppc64le.tar.gz) 
+skipping: [oscar1] => (item=e7fbd2d03a2c6b15c45c8ff8e34686268a33f0e2c717b9980a7d91e1653e4bdf  prometheus-2.12.0.linux-s390x.tar.gz) 
+skipping: [oscar1] => (item=d58a04c04e173acc1b8c042e56557fda1897205287a0ce66a922f8a064b2c31c  prometheus-2.12.0.netbsd-386.tar.gz) 
+skipping: [oscar1] => (item=0c7214049822c395782160885f5f360dda8848647f2cb68cdc60fd7c71b00ba0  prometheus-2.12.0.netbsd-amd64.tar.gz) 
+skipping: [oscar1] => (item=a7081575a27b811838157d14d4e9da3a6b8efe4257764082503bfec23a0e1ffc  prometheus-2.12.0.netbsd-armv6.tar.gz) 
+skipping: [oscar1] => (item=904cfab49218e810af58faf89c12cdef700f8e73eb8afbee5d3fdb808f1d749f  prometheus-2.12.0.netbsd-armv7.tar.gz) 
+skipping: [oscar1] => (item=aa8f8ed8f6e2bd76bbf8892e350963100e252f0e92165cca2242c56c3de31e76  prometheus-2.12.0.openbsd-386.tar.gz) 
+skipping: [oscar1] => (item=950068fd7b23882d0a85175ffc0372c6c8d8df4f06e6b71a3a4e6b8541bf38aa  prometheus-2.12.0.openbsd-amd64.tar.gz) 
+skipping: [oscar1] => (item=61cc79b7fc37df53a8854acfa72a8cc793fb0c5e39c9c510a8688a02a2b2ae8e  prometheus-2.12.0.openbsd-armv7.tar.gz) 
+skipping: [oscar1] => (item=31213e52ae1cc85ec61f6e7b0fc859b12bb05191a4693dd0d6fc9574cf33e04f  prometheus-2.12.0.windows-386.tar.gz) 
+skipping: [oscar1] => (item=c93d1677747f8522955962d750a6514b59551e941570ff1ab6441a8ef9270c3f  prometheus-2.12.0.windows-amd64.tar.gz) 
+
+TASK [oscar1 : create prometheus system group] *********************************
+changed: [oscar1]
+
+TASK [oscar1 : create prometheus system user] **********************************
+changed: [oscar1]
+
+TASK [oscar1 : create prometheus data directory] *******************************
+changed: [oscar1]
+
+TASK [oscar1 : create prometheus configuration directories] ********************
+changed: [oscar1] => (item=/etc/prometheus)
+changed: [oscar1] => (item=/etc/prometheus/conf.d)
+changed: [oscar1] => (item=/etc/prometheus/rules)
+changed: [oscar1] => (item=/etc/prometheus/file_sd)
+
+TASK [oscar1 : download prometheus binary to local folder] *********************
+ok: [oscar1 -> localhost]
+
+TASK [oscar1 : unpack prometheus binaries] *************************************
+skipping: [oscar1]
+
+TASK [oscar1 : propagate prometheus and promtool binaries] *********************
+changed: [oscar1] => (item=prometheus)
+changed: [oscar1] => (item=promtool)
+
+TASK [oscar1 : propagate console templates] ************************************
+changed: [oscar1] => (item=console_libraries)
+changed: [oscar1] => (item=consoles)
+
+TASK [oscar1 : create systemd service unit] ************************************
+changed: [oscar1]
+
+TASK [oscar1 : Install SELinux dependencies] ***********************************
+ok: [oscar1] => (item=libselinux-python)
+ok: [oscar1] => (item=policycoreutils-python)
+
+TASK [oscar1 : Allow prometheus to bind to port in SELinux] ********************
+changed: [oscar1]
+
+TASK [oscar1 : alerting rules file] ********************************************
+changed: [oscar1]
+
+TASK [oscar1 : copy custom alerting rule files] ********************************
+ [WARNING]: Unable to find 'prometheus/rules' in expected paths (use -vvvvv to
+see paths)
+
+
+TASK [oscar1 : configure prometheus] *******************************************
+changed: [oscar1]
+
+TASK [oscar1 : configure prometheus static targets] ****************************
+changed: [oscar1] => (item={'key': 'node', 'value': [{'targets': ['172.16.1.5:9100'], 'labels': {'env': 'demosite'}}]})
+
+TASK [oscar1 : copy prometheus custom static targets] **************************
+ [WARNING]: Unable to find 'prometheus/targets' in expected paths (use -vvvvv
+to see paths)
+
+
+TASK [oscar1 : ensure prometheus service is started and enabled] ***************
+changed: [oscar1]
+
+RUNNING HANDLER [oscar1 : restart prometheus] **********************************
+changed: [oscar1]
+
+RUNNING HANDLER [oscar1 : reload prometheus] ***********************************
+changed: [oscar1]
+
+PLAY RECAP *********************************************************************
+oscar1                     : ok=29   changed=14   unreachable=0    failed=0    skipped=7    rescued=0    ignored=0 

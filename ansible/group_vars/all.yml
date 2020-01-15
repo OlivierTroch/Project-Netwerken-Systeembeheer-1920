@@ -1,0 +1,7 @@
+# group_vars/all.yml
+# Variables visible to all nodes
+---
+
+dns_nameservers:
+- 172.16.1.70
+- 8.8.8.8

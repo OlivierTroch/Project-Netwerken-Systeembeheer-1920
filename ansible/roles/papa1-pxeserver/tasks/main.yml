@@ -1,0 +1,56 @@
+---
+# nginx
+- name: Create CentOS ISO directory.
+  file: path={{ pxe_server_kickstart_iso_mount_path }} state=directory
+
+- name: Create kickstart files directory.
+  file: path={{ pxe_server_kickstart_file_path }} state=directory
+
+- name: Copy pxe-server nginx config in place.
+  template: src=nginx.conf.j2 dest=/etc/nginx/conf.d/pxe-server.conf
+  notify: reload nginx
+
+# tftp
+- name: Create pxelinux directories.
+  file: path={{ pxe_server_kickstart_tftpboot_path }}/{{ item }} state=directory
+  with_items:
+    - pxelinux.cfg
+    - pxelinux
+
+- name: Copy syslinux files.
+  copy: src="/usr/share/syslinux/{{ item }}" dest={{ pxe_server_kickstart_tftpboot_path }}/ remote_src=True
+  with_items:
+    - pxelinux.0
+    - menu.c32
+
+# download ISO
+- name: Download isolinux files from http://ftp.hosteurope.de/mirror/centos.org/8/BaseOS/x86_64/os/isolinux/
+  get_url: url=http://ftp.hosteurope.de/mirror/centos.org/8/BaseOS/x86_64/os/isolinux/{{ item }} dest={{ pxe_server_kickstart_tftpboot_path }}/{{ item }}
+  with_items:
+    - initrd.img
+    - vmlinuz
+
+# - name: Download centos8.iso
+#   get_url: url={{ pxe_server_kickstart_iso_download_path }} dest={{ pxe_server_kickstart_iso_file_path }}
+
+# ISO mount
+- name: Mount the CentOS image.
+  mount: name={{ pxe_server_kickstart_iso_mount_path }} src={{ pxe_server_kickstart_iso_file_path }} opts=ro,loop fstype=iso9660 state=mounted
+
+- name: Mount the Fedora image.
+  mount : name={{ pxe_server_kickstart_iso_mount_path_fedora }} src={{ pxe_server_kickstart_iso_file_path_fedora }} opts=ro,loop fstype=iso9660 state=mounted
+
+# PXE menu.
+- name: Copy default menu.
+  template: src=default.menu.j2 dest={{ pxe_server_kickstart_tftpboot_path }}/pxelinux.cfg/default
+
+- name: Copy CentOS kickstart file
+  copy: src="/vagrant/ansible/roles/papa1-pxeserver/templates/centos8.cfg" dest="/var/www/html/kickstart/centos8.cfg" remote_src=True
+
+- name: Copy Fedora kickstart file
+  copy: src="/vagrant/ansible/roles/papa1-pxeserver/templates/fedora.cfg" dest="/var/www/html/kickstart/fedora.cfg" remote_src=True
+
+- name: Put SELinux in permissive mode, logging actions that would be blocked.
+  selinux:
+    policy: targeted
+    state: permissive

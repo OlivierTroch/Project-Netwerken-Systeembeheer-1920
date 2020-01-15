@@ -1,0 +1,11 @@
+---
+pxe_server_kickstart_tftpboot_path: /var/lib/tftpboot/centos
+pxe_server_kickstart_file_path: /var/www/html/kickstart
+pxe_server_kickstart_listen: "127.0.0.1:8188"
+pxe_server_kickstart_iso_file_path: "{{ pxe_server_kickstart_tftpboot_path }}/centos7.iso"
+pxe_server_kickstart_iso_download_path: "http://ftp.riken.jp/Linux/centos/7/isos/x86_64/CentOS-7-x86_64-Minimal-1611.iso"
+pxe_server_kickstart_iso_mount_path: /var/www/html/centos7
+
+pxe_server_kickstart_default_timeout: 300
+pxe_server_kickstart_default_title: "########## PXE Boot Menu ##########"
+pxe_server_kickstart_default_menu: {}

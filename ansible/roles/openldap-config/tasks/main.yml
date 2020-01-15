@@ -1,0 +1,63 @@
+---
+# tasks file for net2grid.openldap-server
+
+- name: Copy LDAP DIT templates
+  template:
+    src: "dit.ldif.j2"
+    dest: "/tmp/dit-{{ item }}.ldif"
+    owner: root
+    group: root
+    mode: 0644
+  with_items: "{{ openldap_create_organizationalunits }}"
+
+- name: Copy LDAP groups templates
+  template:
+    src: "groups.ldif.j2"
+    dest: "/tmp/groups-{{ item.name }}.ldif"
+    owner: root
+    group: root
+    mode: 0644
+  with_items: "{{ openldap_create_groups }}"
+
+- name: Copy LDAP users templates
+  template:
+    src: "users.ldif.j2"
+    dest: "/tmp/users-{{ item.name }}.ldif"
+    owner: root
+    group: root
+    mode: 0644
+  with_items: "{{ openldap_create_users }}"
+
+- name: Copy LDAP uniquemember templates
+  template:
+    src: "uniquemember.ldif.j2"
+    dest: "/tmp/uniquemember-{{ item.name }}.ldif"
+    owner: root
+    group: root
+    mode: 0644
+  with_items: "{{ openldap_add_uniquemember }}"
+
+- name: Create LDAP directory information tree (DIT)
+  shell: ldapadd -h localhost -x -D "cn=Manager,dc={{ openldap_server_domain_name.split('.')[0] }},dc={{ openldap_server_domain_name.split('.')[1] }}" -w {{ openldap_server_rootpw }} -f /tmp/dit-{{ item }}.ldif && touch "{{ openldap_server_app_path }}{{ item }}_dit_created"
+  args:
+     creates: "{{ openldap_server_app_path }}/dit_created"
+  with_items: "{{ openldap_create_organizationalunits }}"
+
+- name: Create users
+  shell: ldapadd -h localhost -x -D "cn=Manager,dc={{ openldap_server_domain_name.split('.')[0] }},dc={{ openldap_server_domain_name.split('.')[1] }}" -w {{ openldap_server_rootpw }} -f /tmp/users-{{ item.name }}.ldif && touch "{{ openldap_server_app_path }}/{{ item.name }}_users_created"
+  args:
+     creates: "{{ openldap_server_app_path }}/people_created"
+  with_items: "{{ openldap_create_users }}"
+
+- name: Create LDAP groups
+  shell: ldapadd -h localhost -x -D "cn=Manager,dc={{ openldap_server_domain_name.split('.')[0] }},dc={{ openldap_server_domain_name.split('.')[1] }}" -w {{ openldap_server_rootpw }} -f /tmp/groups-{{ item.name }}.ldif && touch "{{ openldap_server_app_path }}/{{ item.name }}_groups_created"
+  args:
+     creates: "{{ openldap_server_app_path }}/groups_created"
+  with_items: "{{ openldap_create_groups }}"
+
+- name: Set up LDAP uniquemembers (these may throw errors, safe to ignore)
+  shell: ldapadd -c -x -D "cn=Manager,dc={{ openldap_server_domain_name.split('.')[0] }},dc={{ openldap_server_domain_name.split('.')[1] }}" -w {{ openldap_server_rootpw }} -f /tmp/uniquemember-{{ item.name }}.ldif && touch "{{ openldap_server_app_path }}/{{ item.name }}_uniquemember_created"
+  args:
+     creates: "{{ openldap_server_app_path }}/uniquemembers_created"
+  with_items: "{{ openldap_add_uniquemember }}"
+  ignore_errors: yes

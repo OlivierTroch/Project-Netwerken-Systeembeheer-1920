@@ -1,0 +1,44 @@
+# Managed by ansible
+
+user              {{ nginx_user }};
+worker_processes  {{ nginx_worker_processes }};
+
+error_log  {{ nginx_error_log }};
+pid        {{ nginx_pid }};
+
+
+events {
+    worker_connections {{ nginx_worker_connections }};
+    multi_accept       {{ nginx_multi_accept }};
+}
+
+
+http {
+    include       {{ nginx_mime_file_path }};
+    default_type  application/octet-stream;
+
+    log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                      '$status $body_bytes_sent "$http_referer" '
+                      '"$http_user_agent" "$http_x_forwarded_for"';
+
+    access_log  {{ nginx_access_log }};
+
+    sendfile    {{ nginx_sendfile }};
+    tcp_nopush  {{ nginx_tcp_nopush }};
+    tcp_nodelay {{ nginx_tcp_nodelay }};
+
+    keepalive_timeout   {{ nginx_keepalive_timeout }};
+    keepalive_requests  {{ nginx_keepalive_requests }};
+
+    client_max_body_size  {{ nginx_client_max_body_size }};
+    client_body_temp_path {{ nginx_client_body_temp_path }};
+    server_tokens         {{ nginx_server_tokens }};
+    port_in_redirect      {{ nginx_port_in_redirect }};
+
+    server_names_hash_bucket_size {{ nginx_server_names_hash_bucket_size }};
+    gzip {{ nginx_gzip }};
+  {% if nginx_gzip == "on" and nginx_gzip_types != "" %}
+    gzip_types {{ nginx_gzip_types }};
+  {% endif %}
+    include {{ nginx_conf_path }}/*.conf;
+}

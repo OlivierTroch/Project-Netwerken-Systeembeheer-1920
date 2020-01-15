@@ -1,0 +1,5 @@
+# Base DIT
+dn: ou={{ item }},dc={{ openldap_server_domain_name.split('.')[0] }},dc={{ openldap_server_domain_name.split('.')[1] }}
+ou: {{ item|capitalize }}
+objectClass: top
+objectClass: organizationalUnit

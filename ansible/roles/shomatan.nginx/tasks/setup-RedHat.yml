@@ -1,0 +1,48 @@
+---
+- name: Install dumb init.
+  get_url:
+    dest: /usr/bin/dumb-init
+    url: https://github.com/Yelp/dumb-init/releases/download/v1.0.2/dumb-init_1.0.2_amd64
+    mode: 0775
+    validate_certs: no
+  when: ansible_connection == 'docker'
+
+- name: Add nginx repository.
+  yum_repository:
+    name: nginx
+    description: nginx repo
+    baseurl: http://nginx.org/packages/mainline/centos/{{ ansible_distribution_major_version }}/$basearch/
+    gpgcheck: no
+    enabled: no
+
+# install
+- name: Ensure latest nginx is installed.
+  yum:
+    name: nginx
+    enablerepo: nginx
+    state: latest
+  when: nginx_version == "latest"
+
+- block:
+    - name: Define nginx_yum_name.
+      set_fact:
+        nginx_yum_name: nginx-{{ nginx_version }}
+
+    - name: Ensure specify nginx is installed.
+      yum:
+        name: "{{ nginx_yum_name }}"
+        enablerepo: nginx
+        state: installed
+  when: nginx_version != "latest"
+
+# Nginx setup.
+- name: Copy nginx service in place.
+  copy:
+    src: nginx.service
+    dest: /usr/lib/systemd/system/nginx.service
+  notify: daemon-reload
+
+# clean
+- name: Purge yum cache.
+  command: yum clean all
+  when: ansible_connection == 'docker'

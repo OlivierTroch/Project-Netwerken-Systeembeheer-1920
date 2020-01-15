@@ -1,0 +1,12 @@
+---
+# defaults file for mariadb-galera-cluster
+#
+galera_cluster_group: 'galera_cluster_nodes'
+#
+# Your inventory file should be IP or name.
+#[galera_cluster_nodes]
+#ip_your_node1
+#ip_your_node2
+#ip_your_node3
+#
+galera_cluster_name: cluster_name

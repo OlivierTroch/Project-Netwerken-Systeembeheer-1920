@@ -1,0 +1,25 @@
+server {
+    listen      80;
+    listen      [::]:80;
+    server_name {{ domain_name | default("_") }};
+
+    return 301 https://$host$request_uri;
+}
+
+server {
+
+        listen 443 ssl http2;
+        listen [::]:443 ssl http2;
+        server_name {{ domain_name | default("_") }};
+
+        include /etc/nginx/ssl.conf;
+
+        root {{ root_directory }};
+
+        {% if nginx_recipe is defined %}
+            {{ nginx_recipe }}
+        {% else %}
+            location / {                
+            }
+        {% endif %}
+}

@@ -1,0 +1,5 @@
+dn: {{ item.group_dn }},dc={{ openldap_server_domain_name.split('.')[0] }},dc={{ openldap_server_domain_name.split('.')[1] }}
+changetype: modify
+add: uniquemember
+uniquemember: {{ item.member_dn }},dc={{ openldap_server_domain_name.split('.')[0] }},dc={{ openldap_server_domain_name.split('.')[1] }}
+

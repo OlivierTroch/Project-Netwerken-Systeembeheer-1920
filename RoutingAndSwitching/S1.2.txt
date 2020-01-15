@@ -1,0 +1,29 @@
+enable
+configure terminal
+hostname S1.2
+
+snmp-server community public RO
+
+vlan 30
+
+int vlan30
+ip address 172.16.1.50 255.255.255.192
+
+int range f0/1-7
+switchport mode access
+switchport access vlan 30
+no shut
+
+enable secret Admin
+service password-encryption
+
+ip domain-name green.local
+crypto key generate rsa
+1024
+username Admin secret Admin
+line vty 0 15
+transport input ssh
+login local
+exit
+ip ssh version 2
+exit

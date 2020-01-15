@@ -1,0 +1,67 @@
+#firewall
+rhbase_firewall_allow_ports:
+  - 389/tcp
+#The domain prefix for ldap
+openldap_server_domain_name: green.local
+
+#This is the password for admin for openldap 
+openldap_server_rootpw: letmein
+
+#The self signed ssl parameters
+openldap_server_country: BE
+openldap_server_state: oostvlaanderen
+openldap_server_location: gent
+openldap_server_organization: IT
+
+openldap_server_enable_ssl: false
+
+#ldap-config configuration
+default_user_password: letmein
+
+openldap_create_organizationalunits:
+  - Afdelingen
+
+openldap_create_groups:
+  - name: IT_Administratie
+    gid: 1001
+    memberuid: 
+      - bert
+      - milan
+    group_ou: ou=Afdelingen
+  - name: Verkoop
+    gid: 1002
+    group_ou: ou=Afdelingen
+  - name: Administratie
+    gid: 1003
+    group_ou: ou=Afdelingen
+  - name: Ontwikkeling
+    gid: 1004
+    memberuid:
+      - bert
+    group_ou: ou=Afdelingen
+  - name: Directie
+    gid: 1005
+    group_ou: ou=Afdelingen
+
+openldap_create_users:
+  - name: milan
+    cn: Milan Dewilde
+    sn: Dewilde
+    password: milan
+    email: dewilde.milan@hotmail.com
+    group_ou: ou=Afdelingen
+    uidNumber: 1501
+  - name: bert
+    cn: Bert Van Vreckem
+    sn: Van Vreckem
+    password: bert
+    email: bert@green.local
+    group_ou: ou=Afdelingen
+    uidNumber: 1502
+
+openldap_add_uniquemember:
+  - name: milan
+    member_dn: uid=milan,ou=Afdelingen
+    group_dn: cn=default-users,ou=Afdelingen
+
+

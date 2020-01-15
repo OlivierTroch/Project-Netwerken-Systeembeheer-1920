@@ -1,0 +1,7 @@
+---
+- name: Debian | Ensure atftpd is installed.
+  apt: name=atftpd state=present
+
+# service
+- name: Debian | Ensure atftpd is started and enabled to start at boot.
+  service: name=atftpd state=started enabled=yes

@@ -1,0 +1,6 @@
+---
+- name: galera cluster file
+  template:
+    src: server.cnf.j2
+    dest: /etc/my.cnf.d/server.cnf
+...

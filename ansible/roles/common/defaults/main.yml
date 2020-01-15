@@ -1,0 +1,8 @@
+node_exporter_download: 'https://github.com/prometheus/node_exporter/releases/download/v0.18.1/node_exporter-0.18.1.linux-amd64.tar.gz'
+node_exporter_checksum: 'sha256:https://github.com/prometheus/node_exporter/releases/download/v0.18.1/sha256sums.txt'
+
+node_exporter_user: node_exporter
+node_exporter_group: node_exporter
+node_exporter_directory: /opt/node_exporter
+node_exporter_service: node_exporter
+node_exporter_port: 9100/tcp

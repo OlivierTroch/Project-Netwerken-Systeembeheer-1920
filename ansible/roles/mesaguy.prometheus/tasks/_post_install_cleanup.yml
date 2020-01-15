@@ -1,0 +1,125 @@
+---
+- block:
+  - name: Find paths under {{ prometheus_software_root_dir }}, exclude the current installation
+    # Search for files and directories in this software's installation
+    # directory. If paths *other* than the current release's path exist
+    # then flag them for removal below
+    find:
+      paths: '{{ prometheus_software_root_dir }}'
+      file_type: any
+      recurse: false
+      excludes:
+        - '{{ prometheus_software_version }}'
+        - '{{ prometheus_software_version }}__go-{{ prometheus_go_version }}'
+    register: present_paths
+
+  - name: Remove orphan {{ prometheus_software_name }} files and directories in favor of {{ prometheus_software_install_dir }}
+    # Remove paths flagged for deletion above
+    become: true
+    file:
+      path: '{{ prometheus_cleanup_item.path }}'
+      state: absent
+    with_items: '{{ present_paths.files }}'
+    loop_control:
+      loop_var: prometheus_cleanup_item
+    when: present_paths.files
+  when: prometheus_purge_orphans|bool
+
+- name: Unset {{ prometheus_software_name }} specific facts
+  # This step is taken for the sake of safety. If every installation
+  # overrides these variables, then this step is redundant
+  set_fact:
+    # Additional tgroup labels, usually defined for an exporter that
+    # isn't managed by this role
+    prometheus_additional_tgroup_labels: {}
+    # Boolean that specifies if software is a Prometheus exporter
+    prometheus_exporter: false
+    prometheus_software_binary: ''
+    prometheus_software_binary_name: ''
+    # Hash of additional directories to copy from build's source directory
+    # to the installation directory. Only applicable to builds, not binary
+    # installs
+    prometheus_software_build_copy_dirs: {}
+    # Hash of files with a list of capabilities to apply
+    prometheus_software_capabilities: {}
+    prometheus_software_files: []
+    prometheus_software_config: ''
+    prometheus_software_config_file: ''
+    prometheus_software_config_name: ''
+    prometheus_software_command_args: []
+    prometheus_software_dependencies: []
+    prometheus_software_description: ''
+    # Link to documentation about the software. This variable is inserted
+    # in the service init/systemd file:
+    prometheus_software_documentation: ''
+    # A software download has occured, this is the registered result of that action
+    prometheus_software_download: ''
+    # Environmental variables to pass to software via init/systemd script
+    prometheus_software_env_vars: {}
+    prometheus_software_extra_opts: ''
+    prometheus_software_fallback_to_build: '{{ prometheus_fallback_to_build }}'
+    prometheus_software_filename: ''
+    # The IP/s the software listens on
+    prometheus_software_host: ''
+    prometheus_software_install_dir: ''
+    # An installation has occured, this is the registered result of that action
+    prometheus_software_installation: ''
+    prometheus_software_instance_port: ''
+    # Command to run when building source code (default assumes code is Golang)
+    # *without* a Makefile
+    prometheus_software_make_command: 'go get -d && go build'
+    # Command to run when building source code (default assumes code is Golang)
+    # *with* a Makefile
+    prometheus_software_makefile_make_command: 'make'
+    prometheus_software_name: ''
+    # A combination of the software's name and version, this variables is used
+    # internally, mostly when logging actions
+    prometheus_software_name_version: ''
+    prometheus_software_officialname: ''
+    # Options to pass the software's binary
+    prometheus_software_opts: []
+    # The port the software listens on
+    prometheus_software_port: ''
+    prometheus_software_root_dir: ''
+    # Cause a restart of the software currently being installed/managed
+    prometheus_software_restart: false
+    # User to run software as
+    prometheus_software_runas: ''
+    prometheus_software_src_path: ''
+    prometheus_software_service_name: ''
+    # URL where a software's archived binary can be downloaded
+    prometheus_software_bin_url: ''
+    # URL where a software's binary can be downloaded, not an archive file
+    prometheus_software_file_url: ''
+    # Command to run the {{ prometheus_software_binary }} via. Generally
+    # needed for java jars:
+    prometheus_software_prefix_command: []
+    # Should service's status and port be tested following the start of the
+    # service? This option exists as some exporters (ie: mysqld_exporter)
+    # require a working service (ie: MySQL) in order to run. These exporters
+    # cannot be fully tested and thus the Ansible tests can be selectively
+    # disabled
+    prometheus_software_service_test: true
+    prometheus_software_shortname: ''
+    prometheus_software_src_dir: ''
+    prometheus_software_src_dir_suffix: ''
+    # URL where a software's source code can be downloaded from a VCS
+    prometheus_software_src_url: ''
+    # Version of the software's source to checkout
+    prometheus_software_src_version: ''
+    # Version of Prometheus software to install
+    prometheus_software_version: ''
+    # Extra options to give 'unarchive' when decompressing binary file
+    prometheus_software_binary_unarchive_opts: '{{ prometheus_default_binary_unarchive_opts }}'
+    # Extra options to give 'unarchive' when decompressing source file
+    prometheus_software_src_unarchive_opts: '{{ prometheus_default_src_unarchive_opts }}'
+    # Software supports a kill -HUP to force a reload
+    prometheus_software_supports_reload: false
+    # Command that can be run to validate a configuration file. This command
+    # is added to services to be run ahead of starts/restarts/reloads
+    prometheus_software_validation_command: ''
+    # Service's systemd specific options
+    prometheus_software_systemd_options: ''
+    # Run tgroup configuration file creation from the perspective of a client
+    # node, not from the perspective of a Prometheus server
+    prometheus_tgroup_client_mode: false

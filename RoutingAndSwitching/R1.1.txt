@@ -1,0 +1,28 @@
+enable
+configure terminal
+hostname R1.1
+
+snmp-server community public RO
+
+int g0/0/0
+ip address 172.16.1.105 255.255.255.252
+ip helper-address 172.16.1.1
+ip access-group 30 out
+no shutdown
+
+interface g0/0/1
+ip address 172.16.1.109 255.255.255.252
+no shutdown
+
+ip route 0.0.0.0 0.0.0.0 g0/0/1
+ip route 0.0.0.0 0.0.0.0 172.16.1.110
+#########ip route 172.16.0.0 255.255.0.0 g0/0/0
+ip route 172.18.3.0 255.255.255.252 g0/0/1
+
+interface Tunnel0
+tunnel mode gre ip
+ip address 172.17.4.1 255.255.255.252
+tunnel source 172.16.1.109
+tunnel destination 172.18.3.2
+router ospf 10
+network 172.17.4.0 0.0.0.3 area 0

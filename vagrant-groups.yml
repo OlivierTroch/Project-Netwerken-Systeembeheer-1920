@@ -1,0 +1,38 @@
+# Ansible group definitions
+#
+# This should be a dictionary with group names as keys and a list of hosts that
+# are members of the group as values. E.g.
+#
+# web:
+#   - web001
+#   - web002
+# db:
+#   - db001
+#
+# Leave the file empty if you do not want to define groups.
+---
+nodeexporter:
+  - alfa1
+  - bravo1
+  - charlie1
+  - delta1
+#  - echo1
+  - kilo1
+  - lima1
+#  - mike1
+  - november1
+  - oscar1
+  - papa1
+  - quebec1
+
+#cluster groep aanmaken voor november1,november2,november3 zodat deze allen dezelfde waarden van de variabelen krijgen
+galeracluster:
+  - november1
+  - november2
+  - november3
+#definiering van galera_cluster_groups in config file van ansible
+#Error: enkel 'november1' wordt opgeslagen
+galera_cluster_nodes: 
+  - 172.16.1.4 #november1
+  - 172.16.1.7 #november2
+  - 172.16.1.8 #november3

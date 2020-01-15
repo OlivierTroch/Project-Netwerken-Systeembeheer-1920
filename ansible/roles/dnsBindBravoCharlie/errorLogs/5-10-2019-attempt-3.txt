@@ -1,0 +1,38 @@
+Error code:
+failed: [ns1] (item=green.local) => 
+{"ansible_loop_var": "item", "changed": false, "checksum": "a05d5c29dd95b939ea95309ea01fa078efdcfddb", 
+"exit_status": 1, "item": {"hosts": [{"aliases": ["www"], "ip": "172.16.1.66", "name": "ns1"}, 
+{"ip": "172.16.1.67", "name": "ns2"}], "name": "green.local", "name_servers": ["ns1.green.local", "ns2.green.local"], 
+"networks": ["172.16"]}, "msg": "failed to validate", 
+"stderr": "loading \"green.local\" from \"/home/vagrant/.ansible/tmp/ansible-tmp-1570279979.9875026-113172205720218/source\" 
+class \"IN\"\n", 
+"stderr_lines": ["loading \"green.local\" from \"/home/vagrant/.ansible/tmp/ansible-tmp-1570279979.9875026-113172205720218/source\" 
+class \"IN\""], "stdout": "zone green.local/IN: NS 'ns1.green.local.green.local' has no address records (A or AAAA)\n
+zone green.local/IN: NS 'ns2.green.local.green.local' has no address records (A or AAAA)\n
+zone green.local/IN: not loaded due to errors.\n", 
+"stdout_lines": ["zone green.local/IN: NS 'ns1.green.local.green.local' has no address records (A or AAAA)", 
+"zone green.local/IN: NS 'ns2.green.local.green.local' has no address records (A or AAAA)", 
+"zone green.local/IN: not loaded due to errors."]}
+
+Wat is er misgegaan?
+Master | Create forward lookup zone file vanuit /tasks/master.yml
+
+Fout in detail:
+
+
+
+
+Aangepast tegenover attempt 2:
+
+Hostnames veranderd naar ns1 en ns2 respectievelijk.
+
+
+
+Wat is er gelukt?
+
+Hostname -> ns1 -> in orde
+Ip adres -> 172.16.1.66 -> in orde
+Bind is geïnstalleerd -> in orde
+/etc/named.conf is aangemaakt -> in orde 
+zone green local aangemaakt in named.conf -> in orde 
+reverse zone green local aangemaakt in named.conf -> in orde 

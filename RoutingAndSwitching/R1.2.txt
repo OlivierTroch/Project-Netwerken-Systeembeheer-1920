@@ -1,0 +1,32 @@
+enable
+configure terminal
+hostname R1.2
+
+int s0/1/0
+ip address 172.16.2.2 255.255.255.252
+no shut
+
+int g0/0/0
+ip address 172.16.3.1 255.255.255.252
+no shut
+
+int g0/0/1
+ip address 172.16.1.110 255.255.255.252
+no shut
+exit
+
+ip route 0.0.0.0 0.0.0.0 s0/1/0
+ip route 172.16.0.0 255.255.0.0 g0/0/1
+
+enable secret Admin
+service password-encryption
+ip domain-name green.local
+crypto key generate rsa
+1024
+username Admin secret Admin
+line vty 0 15
+transport input ssh
+login local
+exit
+ip ssh version 2
+exit

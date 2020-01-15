@@ -1,0 +1,51 @@
+---
+- name: Update root password localhost
+  mysql_user:
+    name: "{{ root_login }}"
+    host: "localhost"
+    password: "{{ root_password }}"
+    state: present
+    check_implicit_admin: "yes"
+    login_user: "{{ root_login }}"
+    login_host: "localhost"
+    login_password: "{{ root_password }}"
+  when: ansible_hostname != 'localhost'
+#
+- name: Update root password all hosts
+  mysql_user:
+    name: "{{ root_login }}"
+    host: "{{ item }}"
+    password: "{{ root_password }}"
+    state: present
+    login_user: "{{ root_login }}"
+    login_host: "localhost"
+    login_password: "{{ root_password }}"
+  loop:
+    - "::1"
+    - "127.0.0.1"
+    - "{{ ansible_fqdn }}"
+    - "{{ ansible_hostname }}"
+  when: ansible_hostname != 'localhost'
+#
+- name: Remove anonymous users
+  mysql_user:
+    name: ''
+    host_all: yes
+    state: absent
+    login_user: "{{ root_login }}"
+    login_password: "{{ root_password }}"
+#
+- name: Remove empty root password
+  mysql_user:
+    name: "{{ root_login }}"
+    host: ""
+    state: absent
+    login_user: "{{ root_login }}"
+    login_password: "{{ root_password }}"
+#
+- name: Remove the test database
+  mysql_db:
+    name: test
+    state: absent
+    login_user: "{{ root_login }}"
+    login_password: "{{ root_password }}"

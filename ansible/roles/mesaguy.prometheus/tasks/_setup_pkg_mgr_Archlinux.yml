@@ -1,0 +1,12 @@
+---
+- name: Check pacman core index present
+  stat:
+    path: /var/lib/pacman/sync/core.db
+  changed_when: false
+  register: pacman_core_index
+
+- name: Run the equivalent of 'pacman -Sy'
+  become: true
+  pacman:
+    update_cache: true
+  when: not pacman_core_index.stat.exists

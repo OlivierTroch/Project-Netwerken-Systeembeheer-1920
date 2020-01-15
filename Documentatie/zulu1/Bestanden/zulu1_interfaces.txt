@@ -1,0 +1,2 @@
+em0 = bovenste (NIC) WAN - poort 13.16 
+em1 = onderste (NIC) LAN - poort 13.15

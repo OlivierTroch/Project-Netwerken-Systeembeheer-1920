@@ -1,0 +1,112 @@
+---
+prometheus_install_sponge: true
+prometheus_389ds_exporter_terrycain_extra_opts:
+  - '-ldap.pass=test'
+  - '-ipa-domain=test'
+prometheus_kafka_exporter_danielqsj_extra_opts:
+  - '--kafka.server=127.0.0.1:9092'
+prometheus_ntp_exporter_sapcc_extra_opts:
+  - '-ntp.server=time-a-g.nist.gov'
+# Requires a Kafka server to test against..:
+prometheus_kafka_exporter_danielqsj_port_test: false
+prometheus_consul_exporter_env_vars:
+  CONSUL_HTTP_TOKEN: '4391eca7bcd03f45aa43ca26829c386c329097a7'
+prometheus_digitalocean_exporter_metalmatze_env_vars:
+  DIGITALOCEAN_TOKEN: '4391eca7bcd03f45aa43ca26829c386c329097a7'
+prometheus_couchbase_exporter_blakelead_env_vars:
+  CB_EXPORTER_DB_USER: couchbase
+  CB_EXPORTER_DB_PASSWORD: couchbase
+prometheus_jmx_exporter_cfgs:
+  bitbucket:
+    startDelaySeconds: 0
+    hostPort: 127.0.0.1:1234
+    username:
+    password:
+    jmxUrl: service:jmx:rmi:///jndi/rmi://127.0.0.1:1234/jmxrmi
+    ssl: false
+    lowercaseOutputName: false
+    lowercaseOutputLabelNames: false
+    whitelistObjectNames: ["org.apache.cassandra.metrics:*"]
+    blacklistObjectNames: ["org.apache.cassandra.metrics:type=ColumnFamily,*"]
+    rules:
+      - pattern: 'org.apache.cassandra.metrics<type=(\w+), name=(\w+)><>Value: (\d+)'
+        name: cassandra_$1_$2
+        value: $3
+        valueFactor: 0.001
+        labels: {}
+        help: "Cassandra metric $1 $2"
+        type: GAUGE
+        attrNameSnakeCase: false
+  confluence:
+    startDelaySeconds: 0
+    hostPort: 127.0.0.1:1234
+    username:
+    password:
+    jmxUrl: service:jmx:rmi:///jndi/rmi://127.0.0.1:1234/jmxrmi
+    ssl: false
+    lowercaseOutputName: false
+    lowercaseOutputLabelNames: false
+    whitelistObjectNames: ["org.apache.cassandra.metrics:*"]
+    blacklistObjectNames: ["org.apache.cassandra.metrics:type=ColumnFamily,*"]
+    rules:
+      - pattern: 'org.apache.cassandra.metrics<type=(\w+), name=(\w+)><>Value: (\d+)'
+        name: cassandra_$1_$2
+        value: $3
+        valueFactor: 0.001
+        labels: {}
+        help: "Cassandra metric $1 $2"
+        type: GAUGE
+        attrNameSnakeCase: false
+prometheus_process_exporter_ncabatoff_cfgs:
+  - name: TEST
+    user: prometheus
+    port: 9256
+    data:
+      process_names:
+        - comm:
+            - bash
+        - exe:
+            - sshd
+      exe:
+        - /usr/local/bin/process-exporter
+      cmdline: []
+  - name: TEST2
+    user: nobody
+    port: 9257
+    data:
+      process_names:
+        - comm:
+            - bash
+        - exe:
+            - sshd
+      exe:
+        - /usr/local/bin/process-exporter
+      cmdline: []
+prometheus_script_exporter_adhocteam_cfgs:
+  - name: TEST
+    user: prometheus
+    port: 19172
+    data:
+      scripts:
+        - name: success
+          script: sleep 5
+  - name: TEST2
+    user: nobody
+    port: 29172
+    data:
+      scripts:
+        - name: failure
+          script: sleep 2 && exit 1
+prometheus_grok_exporter_fstab_cfg: '{{ lookup("file", "../tests/files/grok_exporter_fstab.yml") }}'
+prometheus_kafka_exporter_danielqsj_service_test: false
+prometheus_mysqld_exporter_service_test: false
+prometheus_node_exporter_extra_opts:
+  - '--collector.filesystem.ignored-mount-points="^/(sys|proc|dev|run|var/lib/docker/.*)($|/)"'
+  - '--collector.systemd'
+  - '--no-collector.zfs'
+prometheus_nvidia_gpu_exporter_mindprince_service_test: false
+prometheus_script_enable_all: true
+# There are no binaries:
+prometheus_zookeeper_exporter_infonova_fallback_to_build: true
+prometheus_smokeping_exporter_superq_extra_opts:
+  - 'localhost'

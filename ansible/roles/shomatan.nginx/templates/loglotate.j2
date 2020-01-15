@@ -1,0 +1,20 @@
+# Managed by ansible
+
+/var/log/nginx/*.log {
+  weekly
+  missingok
+  rotate 4
+  compress
+  delaycompress
+  notifempty
+  create {{ nginx_loglotate_create }}
+  sharedscripts
+  prerotate
+    if [ -d /etc/logrotate.d/httpd-prerotate ]; then \
+      run-parts /etc/logrotate.d/httpd-prerotate; \
+    fi \
+  endscript
+  postrotate
+    [ -s {{ nginx_pid }} ] && kill -USR1 `cat {{ nginx_pid }}`
+  endscript
+}

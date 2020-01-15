@@ -1,0 +1,84 @@
+---
+
+    bind_zone_dir: /var/local/named-zones
+    bind_zone_file_mode: '0660'
+    bind_allow_query:
+      - 172.16/16
+    bind_listen_ipv4:
+      - any
+    bind_listen_ipv6:
+      - none
+    bind_recursion: false
+    bind_query_log: 'data/query.log'
+    bind_check_names: 'master ignore'
+    bind_zone_master_server_ip: 172.16.1.66
+    bind_zone_minimum_ttl: "2D"
+    bind_zone_time_to_refresh: "2D"
+    bind_zone_time_to_retry: "2H"
+    bind_zone_time_to_expire: "2W"
+    bind_zone_domains:
+      - name: green.local
+        hosts:
+          - name: '@'
+            ip:
+              - '172.16.1.69'
+            aliases:
+              - www
+          - name: alpha1
+            ip: '172.16.1.65'
+          - name: bravo1
+            ip: '172.16.1.66'
+            aliases:
+              - name: ns1
+                type: DNAME
+          - name: charlie1
+            ip: '172.16.1.67'
+            aliases:
+              - name: ns2
+                type: DNAME
+
+          - name: delta1
+            ip: '172.16.1.68'
+          - name: echo1
+            ip: '172.16.1.69'
+          - name: kilo1
+            ip: '172.16.1.1'
+          - name: lima1
+            ip: '172.16.1.2'
+          - name: mike1
+            ip: '172.16.1.3'
+          - name: november1
+            ip: '172.16.1.4'
+          - name: oscar1
+            ip: '172.16.1.5'
+          - name: papa1
+            ip: '172.16.1.6'
+          - name: quebec1
+            ip: '172.16.1.70'
+          - name: zulu1
+            ip: '172.16.1.106'
+          - name: zulu1
+            ip: '172.16.1.102'
+          - name: Router0
+            ip: '172.16.1.105'
+          - name: Switch1
+            ip: '172.16.1.97'
+          - name: Switch2
+            ip: '172.16.1.98'
+          - name: Switch2
+            ip: '172.16.1.101'
+          - name: Management
+            ip: '172.16.99.1'
+        networks: 
+          - '172.16'
+    bind_statistics_channels: true
+
+    prometheus_servers:
+      - 172.16.1.5
+    prometheus_components:
+      - bind_exporter_digitalocean
+    prometheus_bind_exporter_digitalocean_port: 9119
+
+    # prometheus_bind_exporter_digitalocean_extra_opts:
+    #   - '-bind.stats-groups "server,view,tasks"'
+    

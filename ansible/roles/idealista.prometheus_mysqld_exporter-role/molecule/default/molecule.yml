@@ -1,0 +1,34 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+lint:
+  name: yamllint
+platforms:
+  - name: mysqldexporter
+    image: ${MOLECULE_DISTRO:-debian:buster-slim}
+    privileged: false
+    capabilities:
+      - SYS_ADMIN
+    volumes:
+      - '/sys/fs/cgroup:/sys/fs/cgroup:ro'
+    groups:
+      - mysqld
+    tmpfs:
+      - '/tmp'
+      - '/run'
+      - '/run/lock'
+    command: '/lib/systemd/systemd'
+    stop_signal: 'RTMIN+3'
+provisioner:
+  name: ansible
+  lint:
+    name: ansible-lint
+scenario:
+  name: default
+converge: playbook.yml
+verifier:
+  name: goss
+  lint:
+    name: yamllint

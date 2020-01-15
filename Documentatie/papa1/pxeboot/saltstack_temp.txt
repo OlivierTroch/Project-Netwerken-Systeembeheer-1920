@@ -1,0 +1,64 @@
+configuration management tool
+
+saltstack : CLI based tool
+SaltStack is Python based, but instructions are written in YAML or DSL
+SaltStack <-> scalability & resilience
+Master environment -> salt minions
+salt grains == static information about the minion (os, mem, model, number...)
+execution modules == ad hoc commands executed from command line to one or more target minions
+
+
+saltstack uses SSH
+
+Cons : setup phase is slightly tougher
+	Relatively new web UI
+
+Salt Master
+Salt Minion ==  Python-based endpoint that can be deployed on all major *nix and Windows operating systems
+
+A Salt Master can run commands on the Minions as follows:
+mehul@saltmaster:~$ sudo salt \* pkg.list_pkgs
+
+=> search for script to make salt minion
+
+
+
+----- install for minion --------
+sudo yum install epel-release
+sudo yum install python-pip
+pip install salt
+#pip --version
+
+cat /etc/salt/minion
+	-> master: master-ip
+	-> id: "name of minion"
+
+=========> een IP adres minder uitdelen dhcp
+
+extra nodig? : https://linuxize.com/post/how-to-install-pip-on-centos-7/
+
+------ run in debug mode ------
+salt-master -l debug
+
+------ install for master ---------
+sudo yum install epel-release
+sudo yum install python-pip
+pip install salt
+
+
+----- run in debug mode ----------
+salt-master -l debug
+
+
+salt-key -L
+salt-key -a "naamvandeminion"	#accept that salt key
+
+---- testen ---- # '*' -> met * selecteer je alle minions
+salt '*' test.ping	#ping function in testmodule : ping from the master to the minion
+salt '*' cmd.run 'pwd'
+
+salt 'minionnaam' grains.items #static information about the minion
+
+cat /etc/salt/master	#define folder minion has access to
+			#grouping mechanism, by default, all minions can access base
+

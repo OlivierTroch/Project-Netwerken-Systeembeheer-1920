@@ -1,0 +1,84 @@
+# vagrant_hosts.yml
+#
+# List of hosts to be created by Vagrant. For more information about the
+# possible settings, see the documentation at
+# <https://github.com/bertvv/ansible-skeleton>
+---
+  #Alfa1 LDAP server
+- name: alfa1
+  mac: '08:00:27:66:5D:01'
+
+  #Bravo1 DNS Server
+- name: bravo1
+  mac: '08:00:27:66:5D:02'
+  
+  #Charlie1 DNS Backup Server
+- name: charlie1
+  mac: '08:00:27:66:5D:03'
+
+- name: delta1
+  ip: 172.16.1.68
+  mac: '08:00:27:66:5D:04'
+  #  box: bento/centos-7.6
+
+- name: echo1
+  mac: '08:00:27:66:5D:05'
+
+- name: quebec1
+  ip: 172.16.1.70
+
+  # Kilo1 DHCP Server
+- name: kilo1
+  ip: 172.16.1.1
+
+- name: lima1
+  ip: 172.16.1.2
+  mac: '08:00:27:66:5D:06'
+
+- name: mike1
+  mac: '08:00:27:66:5D:07'
+
+  #master-server 1 cluster
+- name: november1
+  mac: '08:00:27:66:5D:08'
+
+  #slave-server 1 cluster
+  #- name: november2
+  #  ip: 172.16.1.7
+  
+  #slave-server 2 cluster
+  #- name: november3
+  #  ip: 172.16.1.8
+
+  # Oscar1 Monitoring Server
+- name: oscar1
+  mac: '08:00:27:66:5D:09'
+  
+  # papa1 PXEserver
+- name: papa1
+  mac: '08:00:27:66:5D:0A'
+  
+# Example of a more elaborate host definition
+# - name: srv002
+#   box: bento/fedora-28
+#   memory: 2048
+#   cpus: 2
+#   ip: 172.20.0.10
+#   netmask: 255.255.0.0
+#   mac: '13:37:de:ad:be:ef'
+#   playbook: srv002.yml
+#   forwarded_ports:
+#     - host: 8080
+#       guest: 80
+#     - host: 8443
+#       guest: 443
+#   synced_folders:
+#     - src: test
+#       dest: /tmp/test
+#     - src: www
+#       dest: /var/www/html
+#       options:
+#         :create: true
+#         :owner: root
+#         :group: root
+#         :mount_options: ['dmode=0755', 'fmode=0644']

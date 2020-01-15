@@ -1,0 +1,4 @@
+# switches.yml
+---
+- hosts: all
+  roles: []

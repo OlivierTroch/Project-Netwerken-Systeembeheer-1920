@@ -1,0 +1,14 @@
+# {{ ansible_managed }}
+{% if dns_domain is defined %}
+domain {{dns_domain}}
+{% endif %}
+{% for nameserver in dns_nameservers %}
+nameserver {{nameserver}}
+{% endfor %}
+{% if dns_searchs is defined %}
+search {% for name in dns_searchs %}{{name}} {% endfor %}
+{% endif %}
+
+{% for options in dns_options %}
+options {{options}}
+{% endfor %}

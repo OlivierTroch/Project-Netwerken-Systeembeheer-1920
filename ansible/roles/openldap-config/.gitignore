@@ -1,0 +1,6 @@
+.DS_Store
+
+# Ansible
+*.retry
+ansible.cfg
+.idea/

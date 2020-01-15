@@ -1,0 +1,7 @@
+openldap_client_pkgs:
+  - pam_ldap
+  - openldap
+  - openldap-clients
+  - authconfig
+
+openldap_server_user: ldap

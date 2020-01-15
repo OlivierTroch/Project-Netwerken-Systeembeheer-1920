@@ -1,0 +1,9 @@
+---
+- name: Ensure APT official nginx key.
+  apt_key: url=http://nginx.org/keys/nginx_signing.key
+
+- name: Ensure APT official nginx repository.
+  apt_repository: repo="deb http://nginx.org/packages/{{ ansible_distribution|lower }}/ {{ ansible_distribution_release }} nginx"
+
+- name: Ensure nginx is installed.
+  apt: name=nginx state=present

@@ -1,0 +1,41 @@
+- name: Create unprivileged user for node exporter
+  user:
+    name: "{{ node_exporter_user }}"
+    create_home: no
+    system: yes
+
+- name: Create directory for node exporter
+  file:
+    path: "{{ node_exporter_directory }}"
+    state: directory
+    owner: "{{ node_exporter_user }}"
+    group: "{{ node_exporter_group }}"
+    mode: 0700
+
+- name: Download node_exporter binary and verify integrity
+  get_url:
+    url: "{{ node_exporter_download }}"
+    dest: /tmp/node_exporter.tar.gz
+    checksum: "{{ node_exporter_checksum }}"
+
+- name: Unarchive node_exporter archive
+  unarchive:
+      src: /tmp/node_exporter.tar.gz
+      dest: "{{ node_exporter_directory }}"
+      extra_opts: [--strip-components=1]
+      owner: "{{ node_exporter_user }}"
+      group: "{{ node_exporter_group }}"
+  notify: restart node exporter
+
+- name: Copy systemd service file
+  template:
+      src: node_exporter.service.j2
+      dest: /etc/systemd/system/{{ node_exporter_service }}.service
+  notify: restart node exporter
+
+- name: Open node exporter port
+  firewalld:
+    port: "{{ node_exporter_port }}"
+    permanent: yes
+    state: enabled
+    immediate: yes

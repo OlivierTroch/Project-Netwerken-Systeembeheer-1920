@@ -1,0 +1,3 @@
+---
+- name: Use LDAP
+  shell: authconfig --enableldap --enableldapauth --ldapserver={{ openldap_server_address }} --ldapbasedn="dc={{ openldap_server_domain_name.split('.')[0] }},dc={{ openldap_server_domain_name.split('.')[1] }}" --enablemkhomedir --updateall

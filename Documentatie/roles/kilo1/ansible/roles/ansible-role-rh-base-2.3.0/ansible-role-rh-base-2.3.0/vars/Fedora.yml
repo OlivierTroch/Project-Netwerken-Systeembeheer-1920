@@ -1,0 +1,16 @@
+# roles/rh-base/vars/Fedora.yml
+---
+rhbase_systemd_services:
+  - systemd-journald.service
+  - systemd-tmpfiles-setup-dev.service
+  - systemd-tmpfiles-setup.service
+
+rhbase_dependencies:
+  - libselinux-python
+  - libsemanage-python
+  - firewalld
+  - python-firewall
+
+rhbase_package_manager: dnf
+rhbase_package_manager_configuration: /etc/dnf/dnf.conf
+

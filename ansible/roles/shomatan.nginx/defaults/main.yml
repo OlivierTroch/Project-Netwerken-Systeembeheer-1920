@@ -1,0 +1,27 @@
+---
+nginx_version: latest
+nginx_worker_processes: "auto"
+nginx_error_log: "/var/log/nginx/error.log warn"
+
+# events
+nginx_worker_connections: 1024
+nginx_multi_accept: "off"
+
+# http
+nginx_mime_file_path: /etc/nginx/mime.types
+nginx_server_names_hash_bucket_size: 128
+nginx_access_log: "/var/log/nginx/access.log main"
+nginx_sendfile: "off"
+nginx_tcp_nopush: "on"
+nginx_tcp_nodelay: "on"
+nginx_keepalive_timeout: 65
+nginx_keepalive_requests: 100
+nginx_client_max_body_size: "64k"
+nginx_client_body_temp_path: "/var/cache/nginx/client_temp"
+nginx_server_tokens: "off"
+nginx_port_in_redirect: "off"
+nginx_gzip: "on"
+nginx_gzip_types: text/css application/javascript text/xml text/plain application/json
+
+# loglotate
+nginx_loglotate_create: "0640 nginx nginx"

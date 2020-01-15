@@ -1,0 +1,29 @@
+enable
+conf t
+hostname S1.3
+
+snmp-server community public RO
+
+vlan 20
+
+int range f0/1-15
+switchport mode access
+switchport access vlan 20
+exit
+
+int vlan20
+ip address 172.16.0.80 255.255.255.0
+
+enable secret Admin
+service password-encryption
+
+ip domain-name green.local
+crypto key generate rsa
+1024
+username Admin secret Admin
+line vty 0 15
+transport input ssh
+login local
+exit
+ip ssh version 2
+exit
